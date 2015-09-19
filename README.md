@@ -6,15 +6,16 @@ let SQL = require('sql-template-strings');
 
 let book = 'harry potter';
 
+// mysql (for mysql2 prepared statements, just replace query with execute):
 mysql.query('SELECT author FROM books WHERE name = ?', [book]);
 // is equivalent to
 mysql.query(SQL`SELECT author FROM books WHERE name = ${book}`);
 
+// postgres:
 pg.query('SELECT author FROM books WHERE name = $1', [book]);
 // is equivalent to
 pg.query(SQL`SELECT author FROM books WHERE name = ${book}`);
 ```
-For mysql2 prepared statements, just replace `query` with `execute`.
 This might not seem like a big deal, but when you do an INSERT with a lot columns writing all the placeholders becomes a nightmare:
 
 ```js
@@ -22,7 +23,7 @@ db.query(
   'INSERT INTO books (name, author, isbn, category, recommended_age, pages, price) VALUES (?, ?, ?, ?, ?, ?, ?)',
   [name, author, isbn, category, recommendedAge, pages, price]
 );
-// is equivalent to
+// is better written as
 db.query(SQL`
   INSERT
   INTO    books
