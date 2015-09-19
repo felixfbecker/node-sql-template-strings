@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Allows you to use ES6 tagged template strings for prepared statements with mysql and postgres",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/felixfbecker/node-sql-template-strings"
+  },
   "keywords": [
     "mysql",
     "mysql2",
