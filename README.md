@@ -1,6 +1,6 @@
-A simple yet powerful module to allow you to use ES6 tagged template strings for prepared/escaped statements in mysql/mysql2 and postgres (and with simple, I mean only 7 lines of code!).
+A simple yet powerful module to allow you to use ES6 tagged template strings for prepared/escaped statements in [mysql](https://www.npmjs.com/package/mysql) / [mysql2](https://www.npmjs.com/package/mysql2) and [postgres](https://www.npmjs.com/package/pq) (and with simple, I mean only 7 lines of code!).
 
-Examples (callbacks omitted):
+Example for escaping queries (callbacks omitted):
 ```js
 let SQL = require('sql-template-strings');
 
@@ -14,7 +14,7 @@ pg.query('SELECT author FROM books WHERE name = $1', [book]);
 // is equivalent to
 pg.query(SQL`SELECT author FROM books WHERE name = ${book}`);
 ```
-
+For mysql2 prepared statements, just replace `query` with `execute`.
 This might not seem like a big deal, but when you do an INSERT with a lot columns writing all the placeholders becomes a nightmare:
 
 ```js
@@ -30,5 +30,19 @@ db.query(SQL`
   VALUES  (${name}, ${author}, ${isbn}, ${category}, ${recommendedAge}, ${pages}, ${price})
 `);
 ```
+Also template strings support line breaks, while normal strings do not.
 
-Also template strings support line breaks.
+Please note that postgre requires prepared statements to be named, otherwise the parameters will be escaped and replaced on the client side.
+You can still use SQL template strings though, you just need to assign a name to the query before using it:
+```js
+// old way
+pg.query({name: 'my_query', text: 'SELECT author FROM books WHERE name = $1', values: [book]});
+
+//with template strings
+let query = SQL`SELECT author FROM books WHERE name = ${book}`;
+query.name = 'my_query';
+pg.query(query);
+
+// or using lodash
+pg.query(_.assign(SQL`SELECT author FROM books WHERE name = ${book}`, {name: 'my_query'}))
+```
