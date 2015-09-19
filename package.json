@@ -1,6 +1,6 @@
 {
   "name": "sql-template-strings",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Allows you to use ES6 tagged template strings for prepared statements with mysql and postgres",
   "main": "index.js",
   "repository": {
