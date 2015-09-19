@@ -18,7 +18,10 @@ pg.query(SQL`SELECT author FROM books WHERE name = ${book}`);
 This might not seem like a big deal, but when you do an INSERT with a lot columns writing all the placeholders becomes a nightmare:
 
 ```js
-db.query('INSERT INTO books (name, author, isbn, category, recommended_age, pages, price) VALUES (?, ?, ?, ?, ?, ?, ?)', [name, author, isbn, category, recommendedAge, pages, price]);
+db.query(
+  'INSERT INTO books (name, author, isbn, category, recommended_age, pages, price) VALUES (?, ?, ?, ?, ?, ?, ?)',
+  [name, author, isbn, category, recommendedAge, pages, price]
+);
 // is equivalent to
 db.query(SQL`
   INSERT
