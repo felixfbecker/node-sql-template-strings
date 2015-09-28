@@ -8,7 +8,7 @@
     "url": "https://github.com/felixfbecker/node-sql-template-strings"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha && standard"
   },
   "keywords": [
     "mysql",
@@ -27,6 +27,7 @@
   "license": "ISC",
   "devDependencies": {
     "chai": "^3.3.0",
-    "mocha": "^2.3.3"
+    "mocha": "^2.3.3",
+    "standard": "^5.3.1"
   }
 }

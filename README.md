@@ -51,4 +51,5 @@ pg.query(_.assign(SQL`SELECT author FROM books WHERE name = ${book}`, {name: 'my
 # Contributing
  - Tests are written using [mocha](https://www.npmjs.com/package/mocha) (BDD style) and [chai](https://www.npmjs.com/package/chai) (expect style)
  - This module follows [standard](https://www.npmjs.com/package/standard) coding style
+ - You can use `npm test` to run the tests and check coding style
  - Since this module is only compatible with ES6 versions of node anyway, use all the ES6 goodies

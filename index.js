@@ -11,8 +11,7 @@ function SQL (strings) {
     if (typeof args[i] === 'object' && args[i].raw) {
       sql += args[i].value
       text += args[i].value
-    }
-    else {
+    } else {
       if (args[i]) {
         values.push(args[i])
         if (i < length - 1) {
