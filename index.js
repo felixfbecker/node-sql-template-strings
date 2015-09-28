@@ -1,8 +1,19 @@
 'use strict'
-module.exports = function SQL (strings) {
-  return {
-    sql: strings.join('?'), // for mysql / mysql2
-    text: strings.reduce((previous, current, i) => previous + '$' + i + current), // for postgres
-    values: Array.from(arguments).slice(1) // since node doesnt support argument unpacking yet
+
+function SQL (strings) {
+  let args = Array.from(arguments).slice(1)
+  let sql = '' // for mysql/mysql2
+  let text = '' // for postgres
+  let values = args
+  for (let i = 0, length = strings.length; i < length; i++) {
+    sql += strings[i]
+    text += strings[i]
+    if (i < length - 1) {
+      sql += '?'
+      text += '$' + (i + 1)
+    }
   }
+  return {sql, text, values}
 }
+
+module.exports = SQL
