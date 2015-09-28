@@ -47,3 +47,6 @@ pg.query(query);
 // or using lodash
 pg.query(_.assign(SQL`SELECT author FROM books WHERE name = ${book}`, {name: 'my_query'}))
 ```
+
+# Contributing
+ - Tests are written using [mocha](https://www.npmjs.com/package/mocha) (BDD style) and [chai](https://www.npmjs.com/package/chai) (expect style)

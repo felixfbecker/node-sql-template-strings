@@ -21,5 +21,8 @@
     "strings"
   ],
   "author": "Felix Becker",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^3.3.0"
+  }
 }
