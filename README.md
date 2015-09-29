@@ -44,6 +44,7 @@ db.query(SQL`SELECT * FROM ${SQL.raw(table)} WHERE author = ${author} ORDER BY $
 
 // you MUST escape user input manually
 mysql.query(SQL`SELECT * FROM ${SQL.raw(mysql.escapeId(someUserInput))} WHERE name = ${book} ORDER BY ${column} ${SQL.raw(order)}`)
+pg.query(SQL`SELECT * FROM ${SQL.raw(pg.escapeIdentifier(someUserInput))} WHERE name = ${book} ORDER BY ${column} ${SQL.raw(order)}`)
 
 // you might need to add quotes
 pg.query(SQL`SELECT * FROM "${SQL.raw(table)}"`)
@@ -57,8 +58,8 @@ for (let table of largeArray) {
 }
 ```
 
-## Prepared Statements in Postgre
-Postgre requires prepared statements to be named, otherwise the parameters will be escaped and replaced on the client side.
+## Prepared Statements in Postgres
+Postgres requires prepared statements to be named, otherwise the parameters will be escaped and replaced on the client side.
 You can still use SQL template strings though, you just need to assign a name to the query before using it:
 ```js
 // old way
