@@ -47,4 +47,52 @@ describe('SQL', function () {
       values: [column, value, column]
     })
   })
+  it('should accept PG keyword', function () {
+    let order = 'desc'
+    expect(SQL`SELECT * FROM table ORDER BY blah ${SQL.PG.keyword(order)}`).to.deep.equal({
+      sql: 'SELECT * FROM table ORDER BY blah DESC',
+      text: 'SELECT * FROM table ORDER BY blah DESC',
+      values: []
+    })
+  })
+  it('should accept narrowed PG keyword', function () {
+    let order = 'desc'
+    expect(SQL`SELECT * FROM table ORDER BY blah ${SQL.PG.keyword(order, ['ASC', 'DESC'])}`).to.deep.equal({
+      sql: 'SELECT * FROM table ORDER BY blah DESC',
+      text: 'SELECT * FROM table ORDER BY blah DESC',
+      values: []
+    })
+  })
+  it('should accept narrowed outside PG keyword', function () {
+    let order = 'desc'
+    expect(() => SQL`SELECT * FROM table ORDER BY blah ${SQL.PG.keyword(order, ['STRICT', 'REPLACE'])}`).to.throw(SQL.InvalidValue)
+  })
+  it('should not accept PG non-keyword', function () {
+    let order = 'descr'
+    expect(() => SQL`SELECT * FROM table ORDER BY blah ${SQL.PG.keyword(order)}`).to.throw(SQL.InvalidValue)
+  })
+  it('should accept keyword', function () {
+    let order = 'desc'
+    expect(SQL`SELECT * FROM table ORDER BY blah ${SQL.PG.keyword(order)}`).to.deep.equal({
+      sql: 'SELECT * FROM table ORDER BY blah DESC',
+      text: 'SELECT * FROM table ORDER BY blah DESC',
+      values: []
+    })
+  })
+  it('should accept PG identifier', function () {
+    let field = 'ham'
+    expect(SQL`SELECT * FROM table WHERE ${SQL.PG.identifier(field)}=1`).to.deep.equal({
+      sql: 'SELECT * FROM table WHERE "ham"=1',
+      text: 'SELECT * FROM table WHERE "ham"=1',
+      values: []
+    })
+  })
+  it('should not accept PG invalid identifier', function () {
+    let field = 'ham cheese'
+    expect(() => SQL`SELECT * FROM table WHERE ${SQL.PG.identifier(field)}=1`).to.throw(SQL.InvalidValue)
+  })
+  it('should not accept PG valid excluded identifier', function () {
+    let field = 'ham'
+    expect(() => SQL`SELECT * FROM table WHERE ${SQL.PG.identifier(field, ['turkey', 'swiss'])}=1`).to.throw(SQL.InvalidValue)
+  })
 })
