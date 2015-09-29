@@ -13,10 +13,8 @@ function SQL (strings) {
       text += args[i].value
     } else if (i < argsLength) {
       values.push(args[i])
-      if (i < stringsLength - 1) {
-        sql += '?'
-        text += '$' + values.length
-      }
+      sql += '?'
+      text += '$' + values.length
     }
   }
   return {sql, text, values}
