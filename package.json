@@ -8,7 +8,7 @@
     "url": "https://github.com/felixfbecker/node-sql-template-strings"
   },
   "scripts": {
-    "test": "standard && mocha"
+    "test": "mocha && standard"
   },
   "keywords": [
     "mysql",
