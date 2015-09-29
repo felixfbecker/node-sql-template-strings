@@ -57,7 +57,7 @@ for (let table of largeArray) {
 }
 ```
 
-## Prepared Statements in Postgre
+## Prepared Statements in Postgres
 Postgre requires prepared statements to be named, otherwise the parameters will be escaped and replaced on the client side.
 You can still use SQL template strings though, you just need to assign a name to the query before using it:
 ```js
@@ -71,6 +71,45 @@ pg.query(query)
 
 // or using lodash
 pg.query(_.assign(SQL`SELECT author FROM books WHERE name = ${book}`, {name: 'my_query'}))
+```
+
+## Postgres Keyword
+You can enforce that a value is a Postgres keyword. If it fails, an exception `SQL.InvalidValue` is thrown.
+
+```js
+let order = 'desc'
+pg.query(SQL`SELECT author FROM books ORDER BY author ${PG.keyword(order)}`)
+// SELECT author FROM books ORDER BY author DESC
+```
+
+You can narrow your options farther with a second `limiter` argument.
+```js
+let order = 'TABLE_NAME'
+pg.query(SQL`SELECT author FROM books ORDER BY author ${PG.keyword(order, ['DESC', 'ASC')}`)
+// throws an error, although TABLE_NAME is a Postgresql keyword.
+```
+
+## Postgres Identifier
+Postgres identifiers can only be made of alphanumeric, diacritical marked letters, numbers, underscores, and dollar signs.
+`SQL.PG.identier` will properly quote your identifier and ensure that it only contains valid characters.
+
+```js
+let field = 'author'
+pg.query(SQL`SELECT ${PG.keyword(field)} FROM books`
+// SELECT "author" FROM books
+```
+
+```js
+let field = 'cheese sandwich'
+pg.query(SQL`SELECT ${PG.keyword(field)} FROM books`
+// throws SQL.InvalidValue because there is a space
+```
+
+You can also limit the possible values.
+```js
+let field = 'phone'
+pg.query(SQL`SELECT ${PG.keyword(field, ['author', 'id')} FROM books`
+// throws SQL.InvalidValue phone isn't one of the valid values
 ```
 
 ## Contributing
