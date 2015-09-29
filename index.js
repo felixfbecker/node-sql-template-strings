@@ -5,19 +5,17 @@ function SQL (strings) {
   let sql = '' // for mysql/mysql2
   let text = '' // for postgres
   let values = []
-  for (let i = 0, length = strings.length; i < length; i++) {
+  for (let i = 0, stringsLength = strings.length, argsLength = args.length; i < stringsLength; i++) {
     sql += strings[i]
     text += strings[i]
-    if (typeof args[i] === 'object' && args[i].raw) {
+    if (typeof args[i] === 'object' && args[i] !== null && args[i].raw) {
       sql += args[i].value
       text += args[i].value
-    } else {
-      if (args[i]) {
-        values.push(args[i])
-        if (i < length - 1) {
-          sql += '?'
-          text += '$' + values.length
-        }
+    } else if (i < argsLength) {
+      values.push(args[i])
+      if (i < stringsLength - 1) {
+        sql += '?'
+        text += '$' + values.length
       }
     }
   }

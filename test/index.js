@@ -19,6 +19,15 @@ describe('SQL', function () {
       values: [value]
     })
   })
+  it('should work with falsy values', function () {
+    let value1 = false
+    let value2 = null
+    expect(SQL`SELECT * FROM table WHERE column1 = ${value1} AND column2 = ${value2}`).to.deep.equal({
+      sql: 'SELECT * FROM table WHERE column1 = ? AND column2 = ?',
+      text: 'SELECT * FROM table WHERE column1 = $1 AND column2 = $2',
+      values: [value1, value2]
+    })
+  })
   it('should work with a query with raw values', function () {
     let value = 'table'
     expect(SQL`SELECT * FROM ${SQL.raw(value)}`).to.deep.equal({
