@@ -91,24 +91,24 @@ pg.query(SQL`SELECT author FROM books ORDER BY author ${PG.keyword(order, ['DESC
 
 ## Postgres Identifier
 Postgres identifiers can only be made of alphanumeric, diacritical marked letters, numbers, underscores, and dollar signs.
-`SQL.PG.identier` will properly quote your identifier and ensure that it only contains valid characters.
+`SQL.PG.identifier` will properly quote your identifier and ensure that it only contains valid characters.
 
 ```js
 let field = 'author'
-pg.query(SQL`SELECT ${PG.keyword(field)} FROM books`
+pg.query(SQL`SELECT ${PG.identifier(field)} FROM books`
 // SELECT "author" FROM books
 ```
 
 ```js
 let field = 'cheese sandwich'
-pg.query(SQL`SELECT ${PG.keyword(field)} FROM books`
+pg.query(SQL`SELECT ${PG.identifier(field)} FROM books`
 // throws SQL.InvalidValue because there is a space
 ```
 
 You can also limit the possible values.
 ```js
 let field = 'phone'
-pg.query(SQL`SELECT ${PG.keyword(field, ['author', 'id')} FROM books`
+pg.query(SQL`SELECT ${PG.identifier(field, ['author', 'id')} FROM books`
 // throws SQL.InvalidValue phone isn't one of the valid values
 ```
 
