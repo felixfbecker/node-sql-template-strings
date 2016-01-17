@@ -66,12 +66,7 @@ You can still use SQL template strings though, you just need to assign a name to
 pg.query({name: 'my_query', text: 'SELECT author FROM books WHERE name = $1', values: [book]})
 
 // with template strings
-let query = SQL`SELECT author FROM books WHERE name = ${book}`
-query.name = 'my_query'
-pg.query(query)
-
-// or using lodash
-pg.query(_.assign(SQL`SELECT author FROM books WHERE name = ${book}`, {name: 'my_query'}))
+pg.query(Object.assign(SQL`SELECT author FROM books WHERE name = ${book}`, {name: 'my_query'}))
 ```
 
 ## Contributing
