@@ -4,7 +4,7 @@
   "description": "ES6 tagged template strings for prepared statements with mysql and postgres",
   "main": "index.js",
   "engines": {
-    "node": "^4.0.0"
+    "node": ">4.0.0"
   },
   "repository": {
     "type": "git",
