@@ -86,8 +86,8 @@ const column = 'author'
 db.query(SQL`SELECT * FROM "`.append(table).append(SQL`" WHERE author = ${author} ORDER BY ${column} `).append(order))
 
 // escape user input manually
-mysql.query(SQL`SELECT * FROM `.append(mysql.escapeId(someUserInput)).append(` WHERE name = ${book} ORDER BY ${column} `.append(order))
-pg.query(SQL`SELECT * FROM `.append(pg.escapeIdentifier(someUserInput)).append(` WHERE name = ${book} ORDER BY ${column} `.append(order)))
+mysql.query(SQL`SELECT * FROM `.append(mysql.escapeId(someUserInput)).append(SQL` WHERE name = ${book} ORDER BY ${column} `).append(order))
+pg.query(SQL`SELECT * FROM `.append(pg.escapeIdentifier(someUserInput)).append(SQL` WHERE name = ${book} ORDER BY ${column} `).append(order)))
 ```
 
 ## Prepared Statements in Postgres
