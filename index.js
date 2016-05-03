@@ -1,27 +1,58 @@
 'use strict'
 
-function SQL (strings) {
-  let args = Array.from(arguments).slice(1)
-  let sql = '' // for mysql/mysql2
-  let text = '' // for postgres
-  let values = []
-  for (let i = 0, stringsLength = strings.length, argsLength = args.length; i < stringsLength; i++) {
-    sql += strings[i]
-    text += strings[i]
-    if (typeof args[i] === 'object' && args[i] !== null && args[i].raw) {
-      sql += args[i].value
-      text += args[i].value
-    } else if (i < argsLength) {
-      values.push(args[i])
-      sql += '?'
-      text += '$' + values.length
-    }
+class SQLStatement {
+
+  /**
+   * @param {string[]} strings
+   * @param {any[]} values
+   */
+  constructor(strings, values) {
+    this.strings = strings
+    this.values = values
   }
-  return {sql, text, values}
+
+  /** Returns the SQL Statement for node-postgres */
+  get text() {
+    return this.strings.reduce((prev, curr, i) => prev + '$' + i + curr)
+  }
+
+  /** Returns the SQL Statement for mysql */
+  get sql() {
+    return this.strings.join('?')
+  }
+
+  /**
+   * @param {SQLStatement|string} statement
+   * @returns {this}
+   */
+  append(statement) {
+    if (statement instanceof SQLStatement) {
+      this.strings[this.strings.length - 1] += statement.strings[0]
+      this.strings.push.apply(this.strings, statement.strings.slice(1))
+      this.values.push.apply(this.values, statement.values)
+    } else {
+      this.strings[this.strings.length - 1] += statement
+    }
+    return this
+  }
+
+  /**
+   * @param {string} name
+   * @returns {this}
+   */
+  setName(name) {
+    this.name = name
+    return this
+  }
 }
 
-SQL.raw = function (value) {
-  return {value, raw: true}
+/**
+ * @param {string[]} strings
+ * @param {...any} values
+ * @returns {SQLStatement}
+ */
+function SQL(strings) {
+  return new SQLStatement(strings.slice(0), Array.from(arguments).slice(1))
 }
 
-module.exports = SQL
+module.exports = exports.default = SQL

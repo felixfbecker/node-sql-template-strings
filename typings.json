@@ -1,0 +1,10 @@
+{
+  "name": "sql-template-strings",
+  "version": "2.0.0",
+  "main": "typings.d.ts",
+  "dependencies": {},
+  "ambientDevDependencies": {
+    "mocha": "registry:dt/mocha#2.2.5+20160317120654",
+    "node": "registry:dt/node#4.0.0+20160501135006"
+  }
+}

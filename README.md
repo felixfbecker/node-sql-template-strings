@@ -1,20 +1,27 @@
+[![Version](https://img.shields.io/npm/v/npm.svg?maxAge=2592000)](https://www.npmjs.com/package/sql-template-strings)
+[![Downloads](https://img.shields.io/npm/dm/sql-template-strings.svg?maxAge=2592000)](https://www.npmjs.com/package/sql-template-strings)
+[![Build Status](https://travis-ci.org/felixfbecker/node-sql-template-strings.svg?branch=master)](https://travis-ci.org/felixfbecker/node-sql-template-strings)
+![Dependencies](https://david-dm.org/felixfbecker/node-sql-template-strings.svg)
+[![License](https://img.shields.io/npm/l/sql-template-strings.svg?maxAge=2592000)](https://github.com/felixfbecker/node-sql-template-strings/blob/master/LICENSE.md)
+
 A simple yet powerful module to allow you to use ES6 tagged template strings for prepared/escaped statements in [mysql](https://www.npmjs.com/package/mysql) / [mysql2](https://www.npmjs.com/package/mysql2) and [postgres](https://www.npmjs.com/package/pq).
 
 Example for escaping queries (callbacks omitted):
 ```js
-let SQL = require('sql-template-strings')
+const SQL = require('sql-template-strings')
 
-let book = 'harry potter'
+const book = 'harry potter'
+const author = 'J. K. Rowling'
 
-// mysql (for mysql2 prepared statements, just replace query with execute):
-mysql.query('SELECT author FROM books WHERE name = ?', [book])
+// mysql:
+mysql.query('SELECT author FROM books WHERE name = ? AND author = ?', [book, author])
 // is equivalent to
-mysql.query(SQL`SELECT author FROM books WHERE name = ${book}`)
+mysql.query(SQL`SELECT author FROM books WHERE name = ${book} AND author = ${author}`)
 
 // postgres:
-pg.query('SELECT author FROM books WHERE name = $1', [book])
+pg.query('SELECT author FROM books WHERE name = $1 AND author = $2', [book, author])
 // is equivalent to
-pg.query(SQL`SELECT author FROM books WHERE name = ${book}`)
+pg.query(SQL`SELECT author FROM books WHERE name = ${book} AND author = ${author}`)
 ```
 This might not seem like a big deal, but when you do an INSERT with a lot columns writing all the placeholders becomes a nightmare:
 
@@ -33,45 +40,71 @@ db.query(SQL`
 ```
 Also template strings support line breaks, while normal strings do not.
 
-## Adding raw values
-Some values cannot be replaced by placeholders in prepared statements, like table names. In these cases, you need to use `SQL.raw()` so the values get inserted directly. Please note that you are then responsible for escaping these values with proper escaping functions first if they come from user input. Also, executing many prepared statements with changing raw values in a loop will quickly overflow the prepared statement buffer (and destroy their performance benefit), so be careful. Examples:
+## How it works
+The SQL template string tag transforms the template string and returns an _object_ that is understood by both mysql and postgres:
+
 ```js
-let table = 'books'
-let order = 'DESC'
-let column = 'author'
+const query = SQL`SELECT author FROM books WHERE name = ${book} AND author = ${author}`
+typeof query // => 'object'
+query.text   // => 'SELECT author FROM books WHERE name = $1 AND author = $2'
+query.sql    // => 'SELECT author FROM books WHERE name = ? AND author = ?'
+query.values // => ['harry potter', 'J. K. Rowling']
+```
 
-db.query(SQL`SELECT * FROM ${SQL.raw(table)} WHERE author = ${author} ORDER BY ${column} ${SQL.raw(order)}`)
+## Building complex queries with `append()`
+It is also possible to build queries by appending another query or a string with the `append()` method (returns `this` for chaining):
 
-// you MUST escape user input manually
-mysql.query(SQL`SELECT * FROM ${SQL.raw(mysql.escapeId(someUserInput))} WHERE name = ${book} ORDER BY ${column} ${SQL.raw(order)}`)
-pg.query(SQL`SELECT * FROM ${SQL.raw(pg.escapeIdentifier(someUserInput))} WHERE name = ${book} ORDER BY ${column} ${SQL.raw(order)}`)
+```js
+query.append(SQL`AND genre = ${genre}`).append(' ORDER BY rating')
+query.text   // => 'SELECT author FROM books WHERE name = $1 AND author = $2 AND genre = $3 ORDER BY rating'
+query.sql    // => 'SELECT author FROM books WHERE name = ? AND author = ? AND genre = ? ORDER BY rating'
+query.values // => ['harry potter', 'J. K. Rowling', 'Fantasy'] ORDER BY rating
+```
 
-// you might need to add quotes
-pg.query(SQL`SELECT * FROM "${SQL.raw(table)}"`)
-mysql.query(SQL`SELECT * FROM \`${SQL.raw(table)}\``)
+This allows you to build complex queries without having to care about the placeholder index or the values array:
 
-// DONT DO THIS - THIS WILL OVERFLOW YOUR PREPARED STATEMENT BUFFER
-for (let table of largeArray) {
-  // for every iteration, a new query will be prepared, even though it is only executed once.
-  // use mysql.query() instead.
-  mysql2.execute(SQL`SELECT * FROM ${SQL.raw(table)}`)
+```js
+const query = SQL`SELECT * FROM books`
+if (params.name) {
+  query.append(SQL` WHERE name = ${params.name}`)
 }
+query.append(SQL` LIMIT 10 OFFSET ${params.offset || 0}`)
+```
+
+## Raw values
+Some values cannot be replaced by placeholders in prepared statements, like table names.
+`append()` replaces the `SQL.raw()` syntax from version 1, just pass a string and it will get appended raw.
+
+ > Please note that when inserting raw values, you are responsible for quoting and escaping these values with proper escaping functions first if they come from user input (E.g. `mysql.escapeId()` and `pg.escapeIdentifier()`).
+ > Also, executing many prepared statements with changing raw values in a loop will quickly overflow the prepared statement buffer (and destroy their performance benefit), so be careful.
+
+```js
+const table = 'books'
+const order = 'DESC'
+const column = 'author'
+
+db.query(SQL`SELECT * FROM "`.append(table).append(SQL`" WHERE author = ${author} ORDER BY ${column} `).append(order))
+
+// escape user input manually
+mysql.query(SQL`SELECT * FROM `.append(mysql.escapeId(someUserInput)).append(` WHERE name = ${book} ORDER BY ${column} `.append(order))
+pg.query(SQL`SELECT * FROM `.append(pg.escapeIdentifier(someUserInput)).append(` WHERE name = ${book} ORDER BY ${column} `.append(order)))
 ```
 
 ## Prepared Statements in Postgres
 Postgres requires prepared statements to be named, otherwise the parameters will be escaped and replaced on the client side.
-You can still use SQL template strings though, you just need to assign a name to the query before using it:
+You can set the name with the `setName()` method:
+
 ```js
 // old way
 pg.query({name: 'my_query', text: 'SELECT author FROM books WHERE name = $1', values: [book]})
 
 // with template strings
-pg.query(Object.assign(SQL`SELECT author FROM books WHERE name = ${book}`, {name: 'my_query'}))
+pg.query(SQL`SELECT author FROM books WHERE name = ${book}`.setName('my_query'))
 ```
+You can also set the name property on the statement object directly or use `Object.assign()`.
 
 ## Contributing
  - Tests are written using [mocha](https://www.npmjs.com/package/mocha) (BDD style) and [chai](https://www.npmjs.com/package/chai) (expect style)
- - This module follows [standard](https://www.npmjs.com/package/standard) coding style
  - You can use `npm test` to run the tests and check coding style
  - Since this module is only compatible with ES6 versions of node anyway, use all the ES6 goodies
  - Pull requests are welcome :)
