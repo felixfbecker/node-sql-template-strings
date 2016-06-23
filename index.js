@@ -9,6 +9,7 @@ class SQLStatement {
   constructor(strings, values) {
     this.strings = strings
     this.values = values
+    this.calculateSql()
   }
 
   /** Returns the SQL Statement for node-postgres */
@@ -16,9 +17,9 @@ class SQLStatement {
     return this.strings.reduce((prev, curr, i) => prev + '$' + i + curr)
   }
 
-  /** Returns the SQL Statement for mysql */
-  get sql() {
-    return this.strings.join('?')
+  /** Calculate the SQL Statement for mysql */
+  calculateSql() {
+    this.sql = this.strings.join('?')
   }
 
   /**
@@ -33,6 +34,7 @@ class SQLStatement {
     } else {
       this.strings[this.strings.length - 1] += statement
     }
+    this.calculateSql()
     return this
   }
 
