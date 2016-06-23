@@ -28,6 +28,16 @@ describe('SQL', () => {
     assert.deepEqual(query.values, [value1, value2])
   })
 
+  it('should expose "sql" as an enumerable property', () => {
+    const query = SQL`SELECT * FROM table`
+    for (const key in query) {
+      if (key === 'sql') {
+        return
+      }
+    }
+    throw new assert.AssertionError({message: 'expected enumerable property "sql"'})
+  })
+
   describe('append()', () => {
 
     it('should return this', () => {
@@ -54,7 +64,7 @@ describe('SQL', () => {
   })
 
   describe('setName()', () => {
-    
+
     it('should set the name and return this', () => {
       assert.equal(SQL`SELECT * FROM table`.setName('my_query').name, 'my_query')
     })

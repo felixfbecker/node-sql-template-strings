@@ -16,11 +16,6 @@ class SQLStatement {
     return this.strings.reduce((prev, curr, i) => prev + '$' + i + curr)
   }
 
-  /** Returns the SQL Statement for mysql */
-  get sql() {
-    return this.strings.join('?')
-  }
-
   /**
    * @param {SQLStatement|string} statement
    * @returns {this}
@@ -45,6 +40,14 @@ class SQLStatement {
     return this
   }
 }
+
+/** Returns the SQL Statement for mysql */
+Object.defineProperty(SQLStatement.prototype, 'sql', {
+  enumerable: true,
+  get() {
+    return this.strings.join('?')
+  }
+})
 
 /**
  * @param {string[]} strings
