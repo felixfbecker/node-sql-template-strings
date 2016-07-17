@@ -58,4 +58,6 @@ function SQL(strings) {
   return new SQLStatement(strings.slice(0), Array.from(arguments).slice(1))
 }
 
-module.exports = exports.default = SQL
+module.exports = SQL
+module.exports.SQL = SQL
+module.exports.default = SQL

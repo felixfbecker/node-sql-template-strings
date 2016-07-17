@@ -6,3 +6,11 @@ node_js:
  - 4
 
 sudo: false
+
+before_deploy:
+ - npm run typedoc
+deploy:
+  skip_cleanup: true
+  provider: surge
+  project: ./typedoc/
+  domain: node-sql-template-strings.surge.sh

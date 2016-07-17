@@ -4,6 +4,8 @@
 ![Dependencies](https://david-dm.org/felixfbecker/node-sql-template-strings.svg)
 [![License](https://img.shields.io/npm/l/sql-template-strings.svg?maxAge=2592000)](https://github.com/felixfbecker/node-sql-template-strings/blob/master/LICENSE.md)
 
+[API Documentation](http://node-sql-template-strings.surge.sh/)
+
 A simple yet powerful module to allow you to use ES6 tagged template strings for prepared/escaped statements in [mysql](https://www.npmjs.com/package/mysql) / [mysql2](https://www.npmjs.com/package/mysql2) and [postgres](https://www.npmjs.com/package/pg).
 
 Example for escaping queries (callbacks omitted):
