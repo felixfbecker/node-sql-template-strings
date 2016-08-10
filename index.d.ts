@@ -65,5 +65,5 @@ declare class SQLStatement {
  * pg.query(SQL`SELECT author FROM books WHERE name = ${book} AND author = ${author}`)
  * ```
  */
-export function SQL(strings: string[], values: any[]): SQLStatement;
+export function SQL(strings: string[], ...values: any[]): SQLStatement;
 export default SQL;
