@@ -11,6 +11,11 @@ class SQLStatement {
     this.values = values
   }
 
+  /** Returns the SQL Statement for Sequelize */
+  get query() {
+    return this.sql
+  }
+
   /** Returns the SQL Statement for node-postgres */
   get text() {
     return this.strings.reduce((prev, curr, i) => prev + '$' + i + curr)

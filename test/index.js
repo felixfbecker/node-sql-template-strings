@@ -38,6 +38,12 @@ describe('SQL', () => {
     throw new assert.AssertionError({message: 'expected enumerable property "sql"'})
   })
 
+  it('should return the same as sql for query for sequelize', () => {
+    const value = 123
+    const statement = SQL`SELECT * FROM table WHERE column = ${value}`
+    assert.equal(statement.query, statement.sql)
+  })
+
   describe('append()', () => {
 
     it('should return this', () => {

@@ -9,6 +9,11 @@ declare class SQLStatement {
   text: string;
 
   /**
+   * The SQL Statement for [Sequelize](https://www.npmjs.com/package/sequelize)
+   */
+  query: string
+
+  /**
    * The SQL Statement for [mysql](https://www.npmjs.com/package/mysql)
    */
   sql: string;

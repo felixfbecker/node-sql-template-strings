@@ -6,7 +6,8 @@
 
 [API Documentation](http://node-sql-template-strings.surge.sh/)
 
-A simple yet powerful module to allow you to use ES6 tagged template strings for prepared/escaped statements in [mysql](https://www.npmjs.com/package/mysql) / [mysql2](https://www.npmjs.com/package/mysql2) and [postgres](https://www.npmjs.com/package/pg).
+A simple yet powerful module to allow you to use ES6 tagged template strings for prepared/escaped statements.  
+Works with [mysql](https://www.npmjs.com/package/mysql), [mysql2](https://www.npmjs.com/package/mysql2), [postgres](https://www.npmjs.com/package/pg) and [sequelize](https://www.npmjs.com/package/sequelize).
 
 Example for escaping queries (callbacks omitted):
 ```js
