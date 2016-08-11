@@ -13,7 +13,7 @@ class SQLStatement {
 
   /** Returns the SQL Statement for Sequelize */
   get query() {
-    return this.sql
+    return this.bind ? this.text : this.sql
   }
 
   /** Returns the SQL Statement for node-postgres */
@@ -28,10 +28,30 @@ class SQLStatement {
   append(statement) {
     if (statement instanceof SQLStatement) {
       this.strings[this.strings.length - 1] += statement.strings[0]
-      this.strings.push.apply(this.strings, statement.strings.slice(1))
-      this.values.push.apply(this.values, statement.values)
+      this.strings.push.apply(this.strings, statement.strings.slice(1));
+      (this.values || this.bind).push.apply(this.values, statement.values)
     } else {
       this.strings[this.strings.length - 1] += statement
+    }
+    return this
+  }
+
+  /**
+   * Use a prepared statement with Sequelize.
+   * Makes `query` return a query with `$n` syntax instead of `?`  and switches the `values` key name to `bind`
+   * @param {boolean} [value=true] value If omitted, defaults to `true`
+   * @returns this
+   */
+  useBind(value) {
+    if (value === undefined) {
+      value = true
+    }
+    if (value && !this.bind) {
+      this.bind = this.values
+      delete this.values
+    } else if (!value && this.bind) {
+      this.values = this.bind
+      delete this.bind
     }
     return this
   }

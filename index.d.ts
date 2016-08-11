@@ -54,6 +54,13 @@ declare class SQLStatement {
    * ```
    */
   setName(name: string): this;
+
+  /**
+   * Use a prepared statement with Sequelize.
+   * Makes `query` return a query with `$n` syntax instead of `?`  and switches the `values` key name to `bind`
+   * If omitted, `value` defaults to `true`.
+   */
+  useBind(value?: boolean): this;
 }
 
 /**
