@@ -5,7 +5,7 @@
   "main": "index.js",
   "typings": "index.d.ts",
   "engines": {
-    "node": ">4.0.0"
+    "node": ">=4.0.0"
   },
   "repository": {
     "type": "git",
