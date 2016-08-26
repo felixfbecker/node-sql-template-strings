@@ -6,6 +6,7 @@
 ![Dependencies](https://david-dm.org/felixfbecker/node-sql-template-strings.svg)
 ![Node Version](http://img.shields.io/node/v/sql-template-strings.svg)
 [![License](https://img.shields.io/npm/l/sql-template-strings.svg?maxAge=2592000)](https://github.com/felixfbecker/node-sql-template-strings/blob/master/LICENSE.md)
+[![Chat](https://badges.gitter.im/felixfbecker/node-sql-template-strings.svg)](https://gitter.im/felixfbecker/node-sql-template-strings?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 [API Documentation](http://node-sql-template-strings.surge.sh/)
 
