@@ -142,6 +142,6 @@ query.append(SQL` LIMIT 10 OFFSET ${params.offset || 0}`)
 
 ## Contributing
  - Tests are written using [mocha](https://www.npmjs.com/package/mocha)
- - You can use `npm test` to run the tests and check coding style
- - Since this module is only compatible with ES6 versions of node anyway, use all the ES6 goodies
+ - The project is written in TypeScript. Run `npm run build` to compile (or `npm run watch`)
+ - Test with `npm test`, lint with `npm run lint`
  - Pull requests are welcome :)

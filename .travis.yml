@@ -6,8 +6,13 @@ node_js:
 
 sudo: false
 
+install:
+ - npm install
+ - typings install
+
 script:
  - npm run lint
+ - npm run build
  - npm run cover
 
 after_success:
