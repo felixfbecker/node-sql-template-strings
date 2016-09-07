@@ -12,7 +12,9 @@
     "url": "https://github.com/felixfbecker/node-sql-template-strings"
   },
   "scripts": {
-    "test": "eslint index.js && mocha",
+    "lint": "eslint index.js test",
+    "test": "mocha test",
+    "cover": "nyc --all mocha test",
     "typedoc": "typedoc --module es2015 --target es2015 --includeDeclarations --mode file --readme none --out typedoc index.d.ts"
   },
   "keywords": [
@@ -33,6 +35,15 @@
   "devDependencies": {
     "eslint": "^3.4.0",
     "mocha": "^3.0.2",
+    "nyc": "^8.1.0",
     "typedoc": "^0.4.4"
+  },
+  "nyc": {
+    "include": [
+      "index.js"
+    ],
+    "exclude": [
+      "test/**/*.js"
+    ]
   }
 }

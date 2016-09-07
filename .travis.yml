@@ -7,6 +7,12 @@ node_js:
 
 sudo: false
 
+script:
+ - npm run cover
+
+after_success:
+ - 'nyc report --reporter=lcov > coverage.lcov && bash <(curl -s https://codecov.io/bash) -f coverage/lcov.info'
+
 before_deploy:
  - npm run typedoc
 deploy:

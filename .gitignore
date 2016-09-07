@@ -1,3 +1,5 @@
 node_modules
 typings
 typedoc
+coverage
+.nyc_output

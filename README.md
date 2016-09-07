@@ -3,6 +3,7 @@
 [![Version](https://img.shields.io/npm/v/sql-template-strings.svg?maxAge=2592000)](https://www.npmjs.com/package/sql-template-strings)
 [![Downloads](https://img.shields.io/npm/dm/sql-template-strings.svg?maxAge=2592000)](https://www.npmjs.com/package/sql-template-strings)
 [![Build Status](https://travis-ci.org/felixfbecker/node-sql-template-strings.svg?branch=master)](https://travis-ci.org/felixfbecker/node-sql-template-strings)
+[![Coverage](https://codecov.io/gh/felixfbecker/node-sql-template-strings/branch/master/graph/badge.svg)](https://codecov.io/gh/felixfbecker/node-sql-template-strings)
 ![Dependencies](https://david-dm.org/felixfbecker/node-sql-template-strings.svg)
 ![Node Version](http://img.shields.io/node/v/sql-template-strings.svg)
 [![License](https://img.shields.io/npm/l/sql-template-strings.svg?maxAge=2592000)](https://github.com/felixfbecker/node-sql-template-strings/blob/master/LICENSE.md)
