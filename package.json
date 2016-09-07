@@ -31,8 +31,8 @@
   "author": "Felix Becker",
   "license": "ISC",
   "devDependencies": {
-    "eslint": "^2.9.0",
-    "mocha": "^2.3.3",
+    "eslint": "^3.4.0",
+    "mocha": "^3.0.2",
     "typedoc": "^0.4.4"
   }
 }
