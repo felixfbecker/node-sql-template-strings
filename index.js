@@ -86,3 +86,4 @@ function SQL(strings) {
 module.exports = SQL
 module.exports.SQL = SQL
 module.exports.default = SQL
+module.exports.SQLStatement = SQLStatement

@@ -1,5 +1,5 @@
 
-declare class SQLStatement {
+export class SQLStatement {
 
   private strings: string[];
 
