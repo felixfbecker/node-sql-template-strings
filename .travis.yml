@@ -6,6 +6,15 @@ node_js:
 
 sudo: false
 
+services:
+ - mysql
+ - postgresql
+
+env:
+  global:
+    - MYSQL_CONN=mysql://root@localhost/
+    - PG_CONN=postgres://postgres@localhost/postgres
+
 script:
  - npm run lint
  - npm run cover
