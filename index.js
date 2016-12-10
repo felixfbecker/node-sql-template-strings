@@ -8,7 +8,10 @@ class SQLStatement {
    */
   constructor(strings, values) {
     this.strings = strings
-    this.values = values
+    this.unflattenedValues = values
+    this.values = this.unflattenedValues.reduce((a, b) => {
+      return a.concat(b)
+    }, [])
   }
 
   /** Returns the SQL Statement for Sequelize */
@@ -18,7 +21,20 @@ class SQLStatement {
 
   /** Returns the SQL Statement for node-postgres */
   get text() {
-    return this.strings.reduce((prev, curr, i) => prev + '$' + i + curr)
+    let counter = 0
+    return this.strings.reduce((prev, curr, i) => {
+      let valuesIndex = i - 1
+      if (this.unflattenedValues && Array.isArray(this.unflattenedValues[valuesIndex])) {
+        let statement = prev
+        statement += this.unflattenedValues[valuesIndex]
+          .map((val) => '$' + ++counter)
+          .join(', ')
+        statement += curr
+        return statement
+      } else {
+        return prev + '$' + ++counter + curr
+      }
+    })
   }
 
   /**
@@ -70,7 +86,19 @@ class SQLStatement {
 Object.defineProperty(SQLStatement.prototype, 'sql', {
   enumerable: true,
   get() {
-    return this.strings.join('?')
+    return this.strings.reduce((prev, curr, i) => {
+      let valuesIndex = i - 1
+      if (this.unflattenedValues && Array.isArray(this.unflattenedValues[valuesIndex])) {
+        let statement = prev
+        statement += this.unflattenedValues[valuesIndex]
+          .map((val) => '?')
+          .join(', ')
+        statement += curr
+        return statement
+      } else {
+        return prev + '?' + curr
+      }
+    })
   }
 })
 

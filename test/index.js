@@ -31,6 +31,17 @@ describe('SQL', () => {
     assert.deepEqual(query.values, [value1, value2])
   })
 
+  it('should handle values that are arrays', () => {
+    const ids = [1, 2, 3]
+    const x = 'foo'
+    const y = [4]
+    const query = SQL`SELECT * FROM table WHERE id IN (${ids}) AND x = ${x} AND y IN (${y})`
+    assert.equal(query.sql, 'SELECT * FROM table WHERE id IN (?, ?, ?) AND x = ? AND y IN (?)')
+    assert.equal(query.query, 'SELECT * FROM table WHERE id IN (?, ?, ?) AND x = ? AND y IN (?)')
+    assert.equal(query.text, 'SELECT * FROM table WHERE id IN ($1, $2, $3) AND x = $4 AND y IN ($5)')
+    assert.deepEqual(query.values, [1, 2, 3, 'foo', 4])
+  })
+
   it('should expose "sql" as an enumerable property', () => {
     const query = SQL`SELECT * FROM table`
     for (const key in query) {
