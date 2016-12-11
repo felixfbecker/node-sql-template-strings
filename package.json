@@ -33,14 +33,14 @@
   "author": "Felix Becker",
   "license": "ISC",
   "devDependencies": {
-    "eslint": "^3.4.0",
-    "mocha": "^3.0.2",
+    "eslint": "^3.12.0",
+    "mocha": "^3.2.0",
     "mysql": "^2.12.0",
     "mysql2": "^1.1.2",
     "nyc": "^10.0.0",
     "pg": "^6.1.1",
     "sequelize": "^3.27.0",
-    "typedoc": "^0.5.0"
+    "typedoc": "^0.5.1"
   },
   "nyc": {
     "include": [
