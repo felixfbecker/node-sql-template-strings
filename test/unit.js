@@ -114,6 +114,15 @@ describe('SQL', () => {
       assert.equal(statement.sql, 'SELECT * FROM table')
       assert.deepEqual(statement.values, [])
     })
+
+    it('should merge 2 consequence SQLStatement parameters', () => {
+      const s1 = SQL`SELECT `
+      const s2 = SQL`* FROM`
+      const s3 = SQL` table_name WHERE key=${'value'}`
+      const s4 = SQL`${s1}${s2}${s3}`
+      assert.equal(s4.sql, 'SELECT * FROM table_name WHERE key=?')
+      assert.deepEqual(s4.values, ['value'])
+    })
   })
 
   describe('setName()', () => {
