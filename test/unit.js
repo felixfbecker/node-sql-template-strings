@@ -77,6 +77,45 @@ describe('SQL', () => {
     })
   })
 
+  describe('pass nested SQLStatement instances', () => {
+    it('should not handle nested SQLStatement as parameter', () => {
+      const nested = SQL`table_name`
+      const statement = SQL`SELECT * FROM ${nested}`
+      assert.equal(statement.sql, 'SELECT * FROM table_name')
+      assert.equal(statement.text, 'SELECT * FROM table_name')
+      assert.deepEqual(statement.values, [])
+    })
+
+    it('should merge SQLStatement instances parameters', () => {
+      const nested = SQL`SELECT id FROM table2 WHERE key = ${'value'}`
+      const statement = SQL`SELECT * FROM table1 WHERE id IN (${nested})`
+      assert.equal(statement.sql, 'SELECT * FROM table1 WHERE id IN (SELECT id FROM table2 WHERE key = ?)')
+      assert.equal(statement.text, 'SELECT * FROM table1 WHERE id IN (SELECT id FROM table2 WHERE key = $1)')
+      assert.deepEqual(statement.values, ['value'])
+    })
+
+    it('should merge SQLStatement instances parameters, 3 nested statements test', () => {
+      const s1 = SQL`SELECT id FROM table WHERE key=${'value1'}`
+      const s2 = SQL`SELECT id FROM table2 WHERE key=${'value0'} AND key2 IN (${s1})`
+      const s3 = SQL`SELECT id FROM table3 WHERE key=${'value2'} AND key3 IN (${s2})`
+      assert.equal(
+        s3.sql,
+        'SELECT id FROM table3 WHERE key=? AND key3 IN (SELECT id FROM table2 WHERE key=? AND key2 IN (SELECT id FROM table WHERE key=?))'
+      )
+      assert.equal(
+        s3.text,
+        'SELECT id FROM table3 WHERE key=$1 AND key3 IN (SELECT id FROM table2 WHERE key=$2 AND key2 IN (SELECT id FROM table WHERE key=$3))'
+      )
+      assert.deepEqual(s3.values, ['value2', 'value0', 'value1'])
+    })
+
+    it('should not handle nested SQLStatement as parameter, if passed first', () => {
+      const statement = SQL`${SQL`SELECT`} * FROM table`
+      assert.equal(statement.sql, 'SELECT * FROM table')
+      assert.deepEqual(statement.values, [])
+    })
+  })
+
   describe('setName()', () => {
 
     it('should set the name and return this', () => {

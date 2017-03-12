@@ -7,8 +7,36 @@ class SQLStatement {
    * @param {any[]} values
    */
   constructor(strings, values) {
-    this.strings = strings
-    this.values = values
+    if (values.length === 0) {
+      this.strings = strings
+      this.values = values
+    } else {
+      this.strings = []
+      this.values = []
+      let prevOpened = false
+      const valuesLength = values.length
+      for (let i = 0; i < valuesLength; i++) {
+        if (prevOpened) {
+          this.strings[this.strings.length - 1] += strings[i]
+          prevOpened = false
+        } else {
+          this.strings.push(strings[i])
+        }
+        const value = values[i]
+        if (value instanceof SQLStatement) {
+          this.append(value)
+          prevOpened = true
+        } else {
+          this.values.push(value)
+        }
+      }
+      if (prevOpened) {
+        this.strings[this.strings.length - 1] += strings[valuesLength]
+        prevOpened = false
+      } else {
+        this.strings.push(strings[valuesLength])
+      }
+    }
   }
 
   /** Returns the SQL Statement for Sequelize */
