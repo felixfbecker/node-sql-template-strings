@@ -85,6 +85,27 @@ if (params.name) {
 query.append(SQL` LIMIT 10 OFFSET ${params.offset || 0}`)
 ```
 
+You can use `appendAll()` to append an array of statements or strings:
+
+```js
+const query = SQL`SELECT * FROM books`
+query.appendAll([SQL`AND genre = ${genre}`, 'ORDER BY rating'])
+query.text   // => 'SELECT author FROM books WHERE name = $1 AND author = $2 AND genre = $3 ORDER BY rating'
+query.sql    // => 'SELECT author FROM books WHERE name = ? AND author = ? AND genre = ? ORDER BY rating'
+query.values // => ['harry potter', 'J. K. Rowling', 'Fantasy'] ORDER BY rating`
+```
+
+`.appendAll()` can be super-helpful when you're inserting multiple rows:
+
+```js
+const query = SQL`INSERT INTO books (name, author) VALUES `
+const books = [{ name: 'harry potter', author: 'J. K. Rowling' }, { name: 'The Hobbit', author: 'J. R. R. Tolkien' }]
+query.appendAll(books.map(book => SQL`(${book.name}, ${book.author})`), ', ') // Custom delimiter: ', '
+query.text   // => 'INSERT INTO books (name, author) VALUES ($1, $2), ($3, $4)'
+query.sql    // => 'INSERT INTO books (name, author) VALUES (?, ?), (?, ?)'
+query.values // => ['harry potter', 'J. K. Rowling', 'The Hobbit', 'J. R. R. Tolkien'] ORDER BY rating`
+```
+
 ## Raw values
 Some values cannot be replaced by placeholders in prepared statements, like table names.
 `append()` replaces the `SQL.raw()` syntax from version 1, just pass a string and it will get appended raw.
