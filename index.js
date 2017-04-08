@@ -36,6 +36,14 @@ class SQLStatement {
     return this
   }
 
+  appendAll(statements, delimiter = ' ') {
+    for (let i = 0; i < statements.length; i++) {
+      this.append(statements[i])
+        .append(i < statements.length - 1 ? delimiter : '')
+    }
+    return this
+  }
+
   /**
    * Use a prepared statement with Sequelize.
    * Makes `query` return a query with `$n` syntax instead of `?`  and switches the `values` key name to `bind`
