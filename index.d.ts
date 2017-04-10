@@ -63,7 +63,7 @@ export class SQLStatement {
    * query.values // => ['harry potter', 'J. K. Rowling', 'The Hobbit', 'J. R. R. Tolkien'] ORDER BY rating`
    * ```
    */
-  appendAll(statement: (SQLStatement|string|number)[]): this;
+  appendAll(statement: (SQLStatement|string|number)[], delimiter?:string): this;
 
   /**
    * Sets the name property of this statement for prepared statements in postgres
