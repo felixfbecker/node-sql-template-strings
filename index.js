@@ -36,7 +36,8 @@ class SQLStatement {
     return this
   }
 
-  appendAll(statements, delimiter = ' ') {
+  appendAll(statements, delimiter) {
+    delimiter = typeof delimiter !== 'undefined' ? delimiter : ' '
     for (let i = 0; i < statements.length; i++) {
       this.append(statements[i])
         .append(i < statements.length - 1 ? delimiter : '')
