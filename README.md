@@ -1,5 +1,7 @@
 # SQL Template Strings
 
+[![Join the chat at https://gitter.im/felixfbecker/node-sql-template-strings](https://badges.gitter.im/felixfbecker/node-sql-template-strings.svg)](https://gitter.im/felixfbecker/node-sql-template-strings?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Version](https://img.shields.io/npm/v/sql-template-strings.svg?maxAge=2592000)](https://www.npmjs.com/package/sql-template-strings)
 [![Downloads](https://img.shields.io/npm/dm/sql-template-strings.svg?maxAge=2592000)](https://www.npmjs.com/package/sql-template-strings)
 [![Build Status](https://travis-ci.org/felixfbecker/node-sql-template-strings.svg?branch=master)](https://travis-ci.org/felixfbecker/node-sql-template-strings)
