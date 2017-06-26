@@ -15,7 +15,9 @@
     "lint": "eslint index.js test",
     "test": "mocha \"test/**/*.js\"",
     "cover": "nyc --all mocha \"test/**/*.js\"",
-    "typedoc": "typedoc --module es2015 --target es2015 --includeDeclarations --mode file --readme none --out typedoc index.d.ts"
+    "typedoc": "typedoc --module es2015 --target es2015 --includeDeclarations --mode file --readme none --out typedoc index.d.ts",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
+    "commitmsg": "validate-commit-msg"
   },
   "keywords": [
     "mysql",
@@ -33,14 +35,18 @@
   "author": "Felix Becker",
   "license": "ISC",
   "devDependencies": {
+    "cz-conventional-changelog": "^2.0.0",
     "eslint": "^4.1.0",
+    "husky": "^0.14.1",
     "mocha": "^3.2.0",
     "mysql": "^2.12.0",
     "mysql2": "^1.1.2",
     "nyc": "^11.0.1",
     "pg": "^6.1.1",
+    "semantic-release": "^6.3.6",
     "sequelize": "^4.0.0",
-    "typedoc": "^0.7.0"
+    "typedoc": "^0.7.0",
+    "validate-commit-msg": "^2.12.2"
   },
   "nyc": {
     "include": [
@@ -49,5 +55,10 @@
     "exclude": [
       "test/**/*.js"
     ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
