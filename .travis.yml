@@ -21,7 +21,7 @@ script:
 
 after_success:
  - 'nyc report --reporter=lcov > coverage.lcov && bash <(curl -s https://codecov.io/bash) -f coverage/lcov.info'
-  - npm run semantic-release
+ - npm run semantic-release
 
 before_deploy:
  - npm run typedoc
