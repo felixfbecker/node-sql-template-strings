@@ -38,6 +38,7 @@ sequelize.query('SELECT author FROM books WHERE name = ? AND author = ?', {repla
 // is equivalent to
 sequelize.query(SQL`SELECT author FROM books WHERE name = ${book} AND author = ${author}`)
 ```
+
 This might not seem like a big deal, but when you do an INSERT with a lot columns writing all the placeholders becomes a nightmare:
 
 ```js
@@ -102,7 +103,17 @@ db.query(SQL`SELECT * FROM "`.append(table).append(SQL`" WHERE author = ${author
 
 // escape user input manually
 mysql.query(SQL`SELECT * FROM `.append(mysql.escapeId(someUserInput)).append(SQL` WHERE name = ${book} ORDER BY ${column} `).append(order))
-pg.query(SQL`SELECT * FROM `.append(pg.escapeIdentifier(someUserInput)).append(SQL` WHERE name = ${book} ORDER BY ${column} `).append(order)))
+pg.query(SQL`SELECT * FROM `.append(pg.escapeIdentifier(someUserInput)).append(SQL` WHERE name = ${book} ORDER BY ${column} `).append(order))
+```
+
+## Binding Arrays
+
+To bind the array dynamically as a parameter use ANY (PostgreSQL only):
+```js
+const authors = ['J. K. Rowling', 'J. R. R. Tolkien']
+const query = SQL`SELECT name FROM books WHERE author = ANY(${authors})`
+query.text   // => 'SELECT name FROM books WHERE author = ANY($1)'
+query.values // => ['J. K. Rowling', 'J. R. R. Tolkien']
 ```
 
 ## Prepared Statements in Postgres
