@@ -15,7 +15,6 @@
 A simple yet powerful module to allow you to use ES6 tagged template strings for prepared/escaped statements.  
 Works with [mysql](https://www.npmjs.com/package/mysql), [mysql2](https://www.npmjs.com/package/mysql2), [postgres](https://www.npmjs.com/package/pg) and [sequelize](https://www.npmjs.com/package/sequelize).
 
-
 Example for escaping queries (callbacks omitted):
 
 ```js
@@ -109,8 +108,8 @@ pg.query(SQL`SELECT * FROM `.append(pg.escapeIdentifier(someUserInput)).append(S
 
 ## Binding Arrays
 
+To bind the array dynamically as a parameter use ANY (PostgreSQL only):
 ```js
-// to bind the array dynamically as a parameter use ANY (PostgreSQL only)
 const authors = ['J. K. Rowling', 'J. R. R. Tolkien']
 const query = SQL`SELECT author FROM books WHERE author = ANY(${authors})`
 query.text   // => 'SELECT author FROM books WHERE author = ANY($1)'
