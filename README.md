@@ -111,8 +111,8 @@ pg.query(SQL`SELECT * FROM `.append(pg.escapeIdentifier(someUserInput)).append(S
 To bind the array dynamically as a parameter use ANY (PostgreSQL only):
 ```js
 const authors = ['J. K. Rowling', 'J. R. R. Tolkien']
-const query = SQL`SELECT author FROM books WHERE author = ANY(${authors})`
-query.text   // => 'SELECT author FROM books WHERE author = ANY($1)'
+const query = SQL`SELECT name FROM books WHERE author = ANY(${authors})`
+query.text   // => 'SELECT name FROM books WHERE author = ANY($1)'
 query.values // => ['J. K. Rowling', 'J. R. R. Tolkien']
 ```
 
