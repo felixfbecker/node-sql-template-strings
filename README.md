@@ -15,6 +15,8 @@
 A simple yet powerful module to allow you to use ES6 tagged template strings for prepared/escaped statements.  
 Works with [mysql](https://www.npmjs.com/package/mysql), [mysql2](https://www.npmjs.com/package/mysql2), [postgres](https://www.npmjs.com/package/pg) and [sequelize](https://www.npmjs.com/package/sequelize).
 
+
+## Examples
 Example for escaping queries (callbacks omitted):
 
 ```js
@@ -38,6 +40,18 @@ sequelize.query('SELECT author FROM books WHERE name = ? AND author = ?', {repla
 // is equivalent to
 sequelize.query(SQL`SELECT author FROM books WHERE name = ${book} AND author = ${author}`)
 ```
+
+Using arrays for an IN statement
+```js
+//To bind the array dynamically as a parameter (don't know the array length in advance), just use ANY instead of IN
+db.query(SQL`SELECT author FROM books WHERE author = ANY ${authors}`)
+
+// Note: if you use a dialect that doesn't support ANY, you can also write it like this
+var statement = SQL`SELECT author FROM books WHERE author = IN (`;
+authors.reduce((prev, curr) => prev.append(',').append(SQL`${id}`), statement);
+statement.append(SQL`)`);
+```
+
 This might not seem like a big deal, but when you do an INSERT with a lot columns writing all the placeholders becomes a nightmare:
 
 ```js
@@ -102,7 +116,7 @@ db.query(SQL`SELECT * FROM "`.append(table).append(SQL`" WHERE author = ${author
 
 // escape user input manually
 mysql.query(SQL`SELECT * FROM `.append(mysql.escapeId(someUserInput)).append(SQL` WHERE name = ${book} ORDER BY ${column} `).append(order))
-pg.query(SQL`SELECT * FROM `.append(pg.escapeIdentifier(someUserInput)).append(SQL` WHERE name = ${book} ORDER BY ${column} `).append(order)))
+pg.query(SQL`SELECT * FROM `.append(pg.escapeIdentifier(someUserInput)).append(SQL` WHERE name = ${book} ORDER BY ${column} `).append(order))
 ```
 
 ## Prepared Statements in Postgres
