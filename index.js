@@ -7,8 +7,18 @@ class SQLStatement {
    * @param {any[]} values
    */
   constructor(strings, values) {
-    this.strings = strings
-    this.values = values
+    this.strings = [strings[0]];
+    this.values = [];
+    for (var i = 0; i < values.length; ++i) {
+        var value = values[i];
+        if (value instanceof SQLStatement) {
+            this.append(value);
+            this.strings[this.strings.length-1] += strings[i + 1];
+        } else {
+            this.values.push(value);
+            this.strings.push(strings[i + 1]);
+        }
+    }
   }
 
   /** Returns the SQL Statement for Sequelize */
