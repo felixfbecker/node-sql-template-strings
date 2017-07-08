@@ -1,6 +1,7 @@
 'use strict'
 let assert = require('assert')
 let SQL = require('..')
+let RAW = SQL.RAW;
 
 describe('SQL', () => {
 
@@ -115,6 +116,14 @@ describe('SQL', () => {
       assert.deepEqual(query.values, [value])
     })
 
+    it('should append a RAW string', () => {
+      const value = 1234
+      const query = SQL`SELECT * FROM table WHERE column = ${value}`.append(RAW(' ORDER BY other_column'))
+      assert.equal(query.sql, 'SELECT * FROM table WHERE column = ? ORDER BY other_column')
+      assert.equal(query.text, 'SELECT * FROM table WHERE column = $1 ORDER BY other_column')
+      assert.deepEqual(query.values, [value])
+    })
+
     it('should work on a bound statement', () => {
       const value = 1234
       const statement = SQL`SELECT * FROM table WHERE column = ${value}`.useBind(true).append(' ORDER BY other_column')
@@ -182,6 +191,27 @@ describe('SQL', () => {
       assert.strictEqual(statement.bind, undefined)
       assert.strictEqual('bind' in statement, false)
       assert.deepStrictEqual(statement.values, [123])
+    })
+  })
+
+  describe('RAW', () => {
+    it('should accept a string', () => {
+      const raw = RAW('SELECT * FROM table')
+      assert.strictEqual(raw.value, 'SELECT * FROM table')
+    })
+
+    it('should work as a template function', () => {
+      const ins = 1234
+      const value = `SELECT * FROM table WHERE column=${ins}`;
+      const raw = RAW`SELECT * FROM table WHERE column=${ins}`;
+      assert.strictEqual(raw.value, value);
+    })   
+
+    it('should return its value from toString()', () => {
+      const str = 'SELECT * FROM table';
+      const raw = RAW(str)
+      assert.strictEqual('' + raw, str);
+      assert.equal(raw, str)
     })
   })
 })
