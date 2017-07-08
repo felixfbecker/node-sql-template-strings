@@ -65,7 +65,7 @@ describe('SQL', () => {
       assert.deepEqual(query.values, [value])
     })
 
-    it('should work with a bound statement', () => {
+    it('should work on a bound statement', () => {
       const value = 1234
       const statement = SQL`SELECT * FROM table WHERE column = ${value}`.useBind(true).append(' ORDER BY other_column')
       assert.equal(statement.sql, 'SELECT * FROM table WHERE column = ? ORDER BY other_column')
@@ -75,6 +75,18 @@ describe('SQL', () => {
       assert.strictEqual('values' in statement, false)
       assert.deepStrictEqual(statement.bind, [1234])
     })
+
+    it('should work with a bound statement as the input', () => {
+      const value1 = 1234;
+      const value2 = 4321;
+      const where = SQL`column2 = ${value2}`.useBind(true);
+      const query = SQL`SELECT * FROM table column1 = ${value1} AND `.append(where);
+      assert.equal(query.sql, 'SELECT * FROM table column1 = ? AND column2 = ?');
+      assert.equal(query.query, 'SELECT * FROM table column1 = ? AND column2 = ?');
+      assert.equal(query.text, 'SELECT * FROM table column1 = $1 AND column2 = $2');
+      assert.deepEqual(query.values, [value1, value2])
+    });
+
   })
 
   describe('setName()', () => {
