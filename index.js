@@ -21,7 +21,7 @@ class SQLStatement {
     this.values = []
     for (let i = 0; i < values.length; ++i) {
       let value = values[i]
-      if (value instanceof SQLStatement | value instanceof RawParameter) {
+      if (value instanceof SQLStatement || value instanceof RawParameter) {
         this.append(value)
         this.strings[this.strings.length-1] += strings[i + 1]
       } else {
