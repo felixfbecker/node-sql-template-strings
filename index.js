@@ -2,11 +2,11 @@
 
 class RawParameter {
   constructor(value) {
-    this.value = '' + value;
+    this.value = '' + value
   }
   
   toString() {
-    return this.value;
+    return this.value
   }
 }
 
@@ -17,16 +17,16 @@ class SQLStatement {
    * @param {any[]} values
    */
   constructor(strings, values) {
-    this.strings = [strings[0]];
-    this.values = [];
+    this.strings = [strings[0]]
+    this.values = []
     for (let i = 0; i < values.length; ++i) {
-      let value = values[i];
-      if ((value instanceof SQLStatement) | (value instanceof RawParameter)) {
-        this.append(value);  
-        this.strings[this.strings.length-1] += strings[i + 1];
+      let value = values[i]
+      if (value instanceof SQLStatement | value instanceof RawParameter) {
+        this.append(value)
+        this.strings[this.strings.length-1] += strings[i + 1]
       } else {
-        this.values.push(value);
-        this.strings.push(strings[i + 1]);
+        this.values.push(value)
+        this.strings.push(strings[i + 1])
       }
     }
   }
@@ -49,7 +49,7 @@ class SQLStatement {
     if (statement instanceof SQLStatement) {
       this.strings[this.strings.length - 1] += statement.strings[0]
       this.strings.push.apply(this.strings, statement.strings.slice(1));
-      (this.values || this.bind).push.apply(this.values, (statement.values || statement.bind))
+      (this.values || this.bind).push.apply(this.values, statement.values || statement.bind)
     } else if (statement instanceof RawParameter) {
       this.strings[this.strings.length - 1] += statement.value
     } else {
@@ -112,11 +112,11 @@ function SQL(strings) {
  * @returns {RawParameter}
  */
 function RAW(strings) {
-  var s;  
-  if (arguments.length == 1) {
-    s = strings;
+  let s  
+  if (arguments.length === 1) {
+    s = strings
   } else {
-    s = strings.reduce((prev, curr, i) => prev + arguments[i] + curr);
+    s = strings.reduce((prev, curr, i) => prev + arguments[i] + curr)
   }
   return new RawParameter(s)
 }

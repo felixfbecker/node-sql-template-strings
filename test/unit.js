@@ -1,7 +1,7 @@
 'use strict'
 let assert = require('assert')
 let SQL = require('..')
-let RAW = SQL.RAW;
+let RAW = SQL.RAW
 
 describe('SQL', () => {
 
@@ -43,53 +43,51 @@ describe('SQL', () => {
   })
 
   describe('SQLStatement values', () => {
-    const simpleValue = 12;
-    const simple = SQL`WHERE x=${simpleValue}`;
 
     it('should substitute SQLStatements', () => {
-      const value = 1234;
-      const where = SQL`1=1`;
-      const query = SQL`SELECT * FROM table column1 = ${value} AND ${where}`;
-      assert.equal(query.sql, 'SELECT * FROM table column1 = ? AND 1=1');
-      assert.equal(query.query, 'SELECT * FROM table column1 = ? AND 1=1');
-      assert.equal(query.text, 'SELECT * FROM table column1 = $1 AND 1=1');
+      const value = 1234
+      const where = SQL`1=1`
+      const query = SQL`SELECT * FROM table column1 = ${value} AND ${where}`
+      assert.equal(query.sql, 'SELECT * FROM table column1 = ? AND 1=1')
+      assert.equal(query.query, 'SELECT * FROM table column1 = ? AND 1=1')
+      assert.equal(query.text, 'SELECT * FROM table column1 = $1 AND 1=1')
       assert.deepEqual(query.values, [value])
-    });
+    })
 
     it('should work with values after', () => {
-      const value1 = 1234;
-      const value2 = 4321;
-      const where = SQL`column2 = ${value2}`;
-      const query = SQL`SELECT * FROM table column1 = ${value1} AND ${where}`;
-      assert.equal(query.sql, 'SELECT * FROM table column1 = ? AND column2 = ?');
-      assert.equal(query.query, 'SELECT * FROM table column1 = ? AND column2 = ?');
-      assert.equal(query.text, 'SELECT * FROM table column1 = $1 AND column2 = $2');
+      const value1 = 1234
+      const value2 = 4321
+      const where = SQL`column2 = ${value2}`
+      const query = SQL`SELECT * FROM table column1 = ${value1} AND ${where}`
+      assert.equal(query.sql, 'SELECT * FROM table column1 = ? AND column2 = ?')
+      assert.equal(query.query, 'SELECT * FROM table column1 = ? AND column2 = ?')
+      assert.equal(query.text, 'SELECT * FROM table column1 = $1 AND column2 = $2')
       assert.deepEqual(query.values, [value1, value2])
-    });
+    })
 
     it('should work with values before', () => {
-      const value1 = 1234;
-      const value2 = 4321;
-      const where = SQL`column2 = ${value2}`;
-      const query = SQL`SELECT * FROM table ${where} AND column1 = ${value1}`;
-      assert.equal(query.sql, 'SELECT * FROM table column2 = ? AND column1 = ?');
-      assert.equal(query.query, 'SELECT * FROM table column2 = ? AND column1 = ?');
-      assert.equal(query.text, 'SELECT * FROM table column2 = $1 AND column1 = $2');
-      assert.deepEqual(query.values, [value2, value1]);
-    });
+      const value1 = 1234
+      const value2 = 4321
+      const where = SQL`column2 = ${value2}`
+      const query = SQL`SELECT * FROM table ${where} AND column1 = ${value1}`
+      assert.equal(query.sql, 'SELECT * FROM table column2 = ? AND column1 = ?')
+      assert.equal(query.query, 'SELECT * FROM table column2 = ? AND column1 = ?')
+      assert.equal(query.text, 'SELECT * FROM table column2 = $1 AND column1 = $2')
+      assert.deepEqual(query.values, [value2, value1])
+    })
 
     it('should work with a bound statement as the input', () => {
-      const value1 = 1234;
-      const value2 = 4321;
-      const where = SQL`column2 = ${value2}`.useBind(true);
-      const query = SQL`SELECT * FROM table column1 = ${value1} AND ${where}`;
-      assert.equal(query.sql, 'SELECT * FROM table column1 = ? AND column2 = ?');
-      assert.equal(query.query, 'SELECT * FROM table column1 = ? AND column2 = ?');
-      assert.equal(query.text, 'SELECT * FROM table column1 = $1 AND column2 = $2');
+      const value1 = 1234
+      const value2 = 4321
+      const where = SQL`column2 = ${value2}`.useBind(true)
+      const query = SQL`SELECT * FROM table column1 = ${value1} AND ${where}`
+      assert.equal(query.sql, 'SELECT * FROM table column1 = ? AND column2 = ?')
+      assert.equal(query.query, 'SELECT * FROM table column1 = ? AND column2 = ?')
+      assert.equal(query.text, 'SELECT * FROM table column1 = $1 AND column2 = $2')
       assert.deepEqual(query.values, [value1, value2])
-    });
+    })
 
-  });
+  })
 
 
   describe('append()', () => {
@@ -136,15 +134,15 @@ describe('SQL', () => {
     })
 
     it('should work with a bound statement as the input', () => {
-      const value1 = 1234;
-      const value2 = 4321;
-      const where = SQL`column2 = ${value2}`.useBind(true);
-      const query = SQL`SELECT * FROM table column1 = ${value1} AND `.append(where);
-      assert.equal(query.sql, 'SELECT * FROM table column1 = ? AND column2 = ?');
-      assert.equal(query.query, 'SELECT * FROM table column1 = ? AND column2 = ?');
-      assert.equal(query.text, 'SELECT * FROM table column1 = $1 AND column2 = $2');
+      const value1 = 1234
+      const value2 = 4321
+      const where = SQL`column2 = ${value2}`.useBind(true)
+      const query = SQL`SELECT * FROM table column1 = ${value1} AND `.append(where)
+      assert.equal(query.sql, 'SELECT * FROM table column1 = ? AND column2 = ?')
+      assert.equal(query.query, 'SELECT * FROM table column1 = ? AND column2 = ?')
+      assert.equal(query.text, 'SELECT * FROM table column1 = $1 AND column2 = $2')
       assert.deepEqual(query.values, [value1, value2])
-    });
+    })
 
   })
 
@@ -202,15 +200,15 @@ describe('SQL', () => {
 
     it('should work as a template function', () => {
       const ins = 1234
-      const value = `SELECT * FROM table WHERE column=${ins}`;
-      const raw = RAW`SELECT * FROM table WHERE column=${ins}`;
-      assert.strictEqual(raw.value, value);
+      const value = `SELECT * FROM table WHERE column=${ins}`
+      const raw = RAW`SELECT * FROM table WHERE column=${ins}`
+      assert.strictEqual(raw.value, value)
     })   
 
     it('should return its value from toString()', () => {
-      const str = 'SELECT * FROM table';
+      const str = 'SELECT * FROM table'
       const raw = RAW(str)
-      assert.strictEqual('' + raw, str);
+      assert.strictEqual('' + raw, str)
       assert.equal(raw, str)
     })
   })
