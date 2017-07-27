@@ -45,7 +45,7 @@
     "pg": "^6.1.1",
     "semantic-release": "^6.3.6",
     "sequelize": "^4.0.0",
-    "typedoc": "^0.7.0",
+    "typedoc": "^0.8.0",
     "validate-commit-msg": "^2.12.2"
   },
   "nyc": {
