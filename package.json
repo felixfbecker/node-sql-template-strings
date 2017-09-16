@@ -43,7 +43,7 @@
     "mysql2": "^1.1.2",
     "nyc": "^11.0.1",
     "pg": "^7.1.0",
-    "semantic-release": "^7.0.1",
+    "semantic-release": "^8.0.0",
     "sequelize": "^4.0.0",
     "typedoc": "^0.8.0",
     "validate-commit-msg": "^2.12.2"
