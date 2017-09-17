@@ -3,3 +3,4 @@ typings
 typedoc
 coverage
 .nyc_output
+package-lock.json
