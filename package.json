@@ -15,7 +15,7 @@
     "lint": "eslint index.js test",
     "test": "mocha \"test/**/*.js\"",
     "cover": "nyc --all mocha \"test/**/*.js\"",
-    "typedoc": "typedoc --module es2015 --target es2015 --includeDeclarations --mode file --readme none --out typedoc index.d.ts",
+    "typedoc": "typedoc --module es2015 --target es2015 --includeDeclarations --excludeExternals --mode file --readme none --out typedoc index.d.ts",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "commitmsg": "validate-commit-msg"
   },
