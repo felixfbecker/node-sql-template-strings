@@ -13,8 +13,8 @@
   },
   "scripts": {
     "lint": "eslint index.js test",
-    "test": "mocha \"test/**/*.js\"",
-    "cover": "nyc --all mocha \"test/**/*.js\"",
+    "test": "mocha \"test/**/*.js\" --exit",
+    "cover": "nyc --all mocha \"test/**/*.js\" --exit",
     "typedoc": "typedoc --module es2015 --target es2015 --includeDeclarations --excludeExternals --mode file --readme none --out typedoc index.d.ts",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "commitmsg": "validate-commit-msg"
@@ -38,7 +38,7 @@
     "cz-conventional-changelog": "^2.0.0",
     "eslint": "^4.1.0",
     "husky": "^0.14.1",
-    "mocha": "^3.2.0",
+    "mocha": "^4.0.0",
     "mysql": "^2.12.0",
     "mysql2": "^1.1.2",
     "nyc": "^11.0.1",
