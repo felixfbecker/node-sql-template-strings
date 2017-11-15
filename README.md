@@ -152,6 +152,11 @@ if (params.name) {
 query.append(SQL` LIMIT 10 OFFSET ${params.offset || 0}`)
 ```
 
+## Editor Integration
+
+- **Sublime Text**: [javascript-sql-sublime-syntax](https://github.com/AsterisqueDigital/javascript-sql-sublime-syntax)
+- **Vim**: [vim-javascript-sql](https://github.com/statico/vim-javascript-sql)
+
 ## Contributing
  - Tests are written using [mocha](https://www.npmjs.com/package/mocha)
  - You can use `npm test` to run the tests and check coding style
