@@ -87,6 +87,17 @@ if (params.name) {
 query.append(SQL` LIMIT 10 OFFSET ${params.offset || 0}`)
 ```
 
+## Building complex queries with SQLStatements
+A value which is an escaped query will add the text & values of the escaped query instead of adding a value.
+
+```js
+const where = SQL`author = ${author}`
+const query = SQL`SELECT author FROM books WHERE name = ${book} AND ${where}`
+query.text   // => 'SELECT author FROM books WHERE name = $1 AND author = $2'
+query.sql    // => 'SELECT author FROM books WHERE name = ? AND author = ?'
+query.values // => ['harry potter', 'J. K. Rowling']
+```
+
 ## Raw values
 Some values cannot be replaced by placeholders in prepared statements, like table names.
 `append()` replaces the `SQL.raw()` syntax from version 1, just pass a string and it will get appended raw.
@@ -105,6 +116,25 @@ db.query(SQL`SELECT * FROM "`.append(table).append(SQL`" WHERE author = ${author
 mysql.query(SQL`SELECT * FROM `.append(mysql.escapeId(someUserInput)).append(SQL` WHERE name = ${book} ORDER BY ${column} `).append(order))
 pg.query(SQL`SELECT * FROM `.append(pg.escapeIdentifier(someUserInput)).append(SQL` WHERE name = ${book} ORDER BY ${column} `).append(order))
 ```
+
+## Raw values with the RAW function / template tag
+Values returned from the RAW function (either by invocation on a string parameter or by use as a template tag) will be
+inserted raw when passed to the template literal or the `append()` function.
+
+```js
+const RAW = SQL.RAW
+
+const table = 'books'
+const column1 = 'name'
+const column2 = 'author'
+
+const columns = RAW`${column1}, ${column2}`
+const tableName = RAW(table)
+const query = SQL`SELECT ${columns} FROM `.append(tableName)
+
+query.text   // => 'SELECT name, author FROM books'
+query.sql    // => 'SELECT name, author FROM books'
+``` 
 
 ## Binding Arrays
 

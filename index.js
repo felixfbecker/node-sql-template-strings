@@ -1,5 +1,15 @@
 'use strict'
 
+class RawParameter {
+  constructor(value) {
+    this.value = '' + value
+  }
+  
+  toString() {
+    return this.value
+  }
+}
+
 class SQLStatement {
 
   /**
@@ -7,8 +17,18 @@ class SQLStatement {
    * @param {any[]} values
    */
   constructor(strings, values) {
-    this.strings = strings
-    this.values = values
+    this.strings = [strings[0]]
+    this.values = []
+    for (let i = 0; i < values.length; ++i) {
+      let value = values[i]
+      if (value instanceof SQLStatement || value instanceof RawParameter) {
+        this.append(value)
+        this.strings[this.strings.length-1] += strings[i + 1]
+      } else {
+        this.values.push(value)
+        this.strings.push(strings[i + 1])
+      }
+    }
   }
 
   /** Returns the SQL Statement for Sequelize */
@@ -22,14 +42,16 @@ class SQLStatement {
   }
 
   /**
-   * @param {SQLStatement|string} statement
+   * @param {SQLStatement|string|RawParameter} statement
    * @returns {this}
    */
   append(statement) {
     if (statement instanceof SQLStatement) {
       this.strings[this.strings.length - 1] += statement.strings[0]
       this.strings.push.apply(this.strings, statement.strings.slice(1));
-      (this.values || this.bind).push.apply(this.values, statement.values)
+      (this.values || this.bind).push.apply(this.values, statement.values || statement.bind)
+    } else if (statement instanceof RawParameter) {
+      this.strings[this.strings.length - 1] += statement.value
     } else {
       this.strings[this.strings.length - 1] += statement
     }
@@ -83,7 +105,25 @@ function SQL(strings) {
   return new SQLStatement(strings.slice(0), Array.from(arguments).slice(1))
 }
 
+/**
+ * 
+ * @param {string|string[]} strings 
+ * @param {...any} values
+ * @returns {RawParameter}
+ */
+function RAW(strings) {
+  let s  
+  if (arguments.length === 1) {
+    s = strings
+  } else {
+    s = strings.reduce((prev, curr, i) => prev + arguments[i] + curr)
+  }
+  return new RawParameter(s)
+}
+
 module.exports = SQL
 module.exports.SQL = SQL
 module.exports.default = SQL
 module.exports.SQLStatement = SQLStatement
+module.exports.RawParameter = RawParameter
+module.exports.RAW = RAW

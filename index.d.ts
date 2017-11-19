@@ -1,3 +1,6 @@
+export class RawParameter {
+    constructor(value: string);
+}
 
 export class SQLStatement {
 
@@ -44,7 +47,7 @@ export class SQLStatement {
    * query.append(SQL` LIMIT 10 OFFSET ${params.offset || 0}`)
    * ```
    */
-  append(statement: SQLStatement|string|number): this;
+  append(statement: SQLStatement|string|number|RawParameter): this;
 
   /**
    * Sets the name property of this statement for prepared statements in postgres
@@ -63,8 +66,26 @@ export class SQLStatement {
   useBind(value?: boolean): this;
 }
 
+/** The RAW template string tag 
+ * Makes the SQL tag substitute the value into the output string instead of treating
+ * it as a query parameter. 
+ * Can be invoked as a template tag or an ordinary function taking a string parameter.
+ * 
+ * ```ts
+ * import {SQL, RAW} from 'sql-template-strings';
+ *
+ * pg.query(SQL`SELECT author FROM books WHERE ${RAW(columnName)} = ${value}`)
+ * 
+ * let columns = RAW`${col1}, ${col2}`
+ * pg.query(SQL`SELECT ${columns} FROM books WHERE ${RAW(columnName)} = ${value}`)
+ *
+ * ```
+ */
+export function RAW(s : string): RawParam;
+export function RAW(strings: any, ...values: any[]): RawParameter;
+
 /**
- * The template string tag
+ * The SQL template string tag
  *
  * ```ts
  * import {SQL} from 'sql-template-strings';
@@ -73,4 +94,6 @@ export class SQLStatement {
  * ```
  */
 export function SQL(strings: any, ...values: any[]): SQLStatement;
+
+
 export default SQL;
