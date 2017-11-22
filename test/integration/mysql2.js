@@ -1,4 +1,3 @@
-
 const SQL = require('../..')
 const mysql2 = require('mysql2')
 const mysql2Promise = require('mysql2/promise')
@@ -11,7 +10,7 @@ describe('mysql2', () => {
         describe(method, () => {
           it('should work with a simple query', done => {
             const connection = mysql2['create' + test](process.env.MYSQL_CONN)
-            connection[method](SQL`SELECT ${1} + 1 AS result`, (err, rows, fields) => {
+            connection[method](SQL`SELECT ${1} + 1 AS result`, (err, rows) => {
               if (err) {
                 return done(err)
               }

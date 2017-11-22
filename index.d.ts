@@ -1,12 +1,10 @@
-
 export class SQLStatement {
-
-  private strings: string[];
+  private strings: string[]
 
   /**
    * The SQL Statement for [node-postgres](https://www.npmjs.com/package/pg)
    */
-  text: string;
+  text: string
 
   /**
    * The SQL Statement for [Sequelize](https://www.npmjs.com/package/sequelize)
@@ -16,17 +14,17 @@ export class SQLStatement {
   /**
    * The SQL Statement for [mysql](https://www.npmjs.com/package/mysql)
    */
-  sql: string;
+  sql: string
 
   /**
    * The values to be inserted for the placeholders
    */
-  values: any[];
+  values: any[]
 
   /**
    * The name for postgres prepared statements, if set
    */
-  name: string;
+  name: string
 
   /**
    * Appends a string or another statement
@@ -44,7 +42,7 @@ export class SQLStatement {
    * query.append(SQL` LIMIT 10 OFFSET ${params.offset || 0}`)
    * ```
    */
-  append(statement: SQLStatement|string|number): this;
+  append(statement: SQLStatement | string | number): this
 
   /**
    * Sets the name property of this statement for prepared statements in postgres
@@ -53,14 +51,14 @@ export class SQLStatement {
    * pg.query(SQL`SELECT author FROM books WHERE name = ${book}`.setName('my_query'))
    * ```
    */
-  setName(name: string): this;
+  setName(name: string): this
 
   /**
    * Use a prepared statement with Sequelize.
    * Makes `query` return a query with `$n` syntax instead of `?`  and switches the `values` key name to `bind`
    * If omitted, `value` defaults to `true`.
    */
-  useBind(value?: boolean): this;
+  useBind(value?: boolean): this
 }
 
 /**
@@ -72,5 +70,5 @@ export class SQLStatement {
  * pg.query(SQL`SELECT author FROM books WHERE name = ${book} AND author = ${author}`)
  * ```
  */
-export function SQL(strings: any, ...values: any[]): SQLStatement;
-export default SQL;
+export function SQL(strings: any, ...values: any[]): SQLStatement
+export default SQL

@@ -3,7 +3,6 @@ let assert = require('assert')
 let SQL = require('..')
 
 describe('SQL', () => {
-
   it('should work with a simple query', () => {
     const query = SQL`SELECT * FROM table`
     assert.equal(query.sql, 'SELECT * FROM table')
@@ -38,11 +37,10 @@ describe('SQL', () => {
         return
       }
     }
-    throw new assert.AssertionError({message: 'expected enumerable property "sql"'})
+    throw new assert.AssertionError({ message: 'expected enumerable property "sql"' })
   })
 
   describe('append()', () => {
-
     it('should return this', () => {
       const query = SQL`SELECT * FROM table`
       assert.strictEqual(query, query.append('whatever'))
@@ -78,14 +76,12 @@ describe('SQL', () => {
   })
 
   describe('setName()', () => {
-
     it('should set the name and return this', () => {
       assert.equal(SQL`SELECT * FROM table`.setName('my_query').name, 'my_query')
     })
   })
 
   describe('useBind()', () => {
-
     it('should change query to $n syntax and swap values with bind', () => {
       const value = 123
       const statement = SQL`SELECT * FROM table WHERE column = ${value}`.useBind(true)

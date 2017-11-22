@@ -1,4 +1,3 @@
-
 const SQL = require('../..')
 const pg = require('pg')
 const assert = require('assert')
