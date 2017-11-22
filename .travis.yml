@@ -1,36 +1,42 @@
 language: node_js
 
 node_js:
- - 8
- - 6
- - 4
-
-sudo: false
-
-services:
- - mysql
- - postgresql
+  - '8'
+  - '6'
+  - '4'
 
 env:
   global:
     - MYSQL_CONN=mysql://root@localhost/
     - PG_CONN=postgres://postgres@localhost/postgres
 
+services:
+  - mysql
+  - postgresql
 script:
- - npm run lint
- - npm run cover
+  - npm run lint
+  - npm run cover
+  - 'nyc report --reporter=lcov > coverage.lcov && bash <(curl -s https://codecov.io/bash) -f coverage/lcov.info'
 
-after_success:
- - 'nyc report --reporter=lcov > coverage.lcov && bash <(curl -s https://codecov.io/bash) -f coverage/lcov.info'
- - npm run semantic-release
+jobs:
+  include:
+    - stage: release
+      node_js: '8'
+      services: []
+      script:
+        - npm run semantic-release
+      before_deploy:
+        - npm run typedoc
+      deploy:
+        skip_cleanup: true
+        provider: surge
+        project: ./typedoc/
+        domain: node-sql-template-strings.surge.sh
 
-before_deploy:
- - npm run typedoc
-deploy:
-  skip_cleanup: true
-  provider: surge
-  project: ./typedoc/
-  domain: node-sql-template-strings.surge.sh
+stages:
+  - test
+  - name: release
+    if: branch = master AND type = push AND fork = false
 
 branches:
   except:

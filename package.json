@@ -16,7 +16,7 @@
     "test": "mocha \"test/**/*.js\" --exit",
     "cover": "nyc --all mocha \"test/**/*.js\" --exit",
     "typedoc": "typedoc --module es2015 --target es2015 --includeDeclarations --excludeExternals --mode file --readme none --out typedoc index.d.ts",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
+    "semantic-release": "semantic-release",
     "commitmsg": "validate-commit-msg"
   },
   "keywords": [
@@ -35,6 +35,7 @@
   "author": "Felix Becker",
   "license": "ISC",
   "devDependencies": {
+    "@semantic-release/github": "^1.0.0",
     "cz-conventional-changelog": "^2.0.0",
     "eslint": "^4.1.0",
     "husky": "^0.14.1",
@@ -43,7 +44,7 @@
     "mysql2": "^1.1.2",
     "nyc": "^11.0.1",
     "pg": "^7.1.0",
-    "semantic-release": "^8.0.0",
+    "semantic-release": "^10.0.0",
     "sequelize": "^4.0.0",
     "typedoc": "^0.9.0",
     "validate-commit-msg": "^2.12.2"
@@ -60,5 +61,8 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "release": {
+    "verifyConditions": "@semantic-release/github"
   }
 }
