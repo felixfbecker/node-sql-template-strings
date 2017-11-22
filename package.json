@@ -3,6 +3,12 @@
   "version": "2.2.2",
   "description": "ES6 tagged template strings for prepared statements with mysql and postgres",
   "main": "index.js",
+  "files": [
+    "index.d.ts",
+    "index.js",
+    "LICENSE.txt",
+    "README.md"
+  ],
   "typings": "index.d.ts",
   "engines": {
     "node": ">=4.0.0"
