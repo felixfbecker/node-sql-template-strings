@@ -54,7 +54,7 @@
     "pg": "^7.1.0",
     "prettier": "^1.8.2",
     "semantic-release": "^10.0.0",
-    "sequelize": "^4.0.0",
+    "sequelize": "4.23.4",
     "typedoc": "^0.9.0",
     "validate-commit-msg": "^2.12.2"
   },
