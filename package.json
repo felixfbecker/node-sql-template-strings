@@ -42,7 +42,7 @@
   "author": "Felix Becker",
   "license": "ISC",
   "devDependencies": {
-    "@semantic-release/github": "^2.0.0",
+    "@semantic-release/github": "^3.0.0",
     "cz-conventional-changelog": "^2.0.0",
     "eslint": "^4.1.0",
     "eslint-config-prettier": "^2.8.0",
