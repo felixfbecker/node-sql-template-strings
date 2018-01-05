@@ -19,7 +19,7 @@
   },
   "scripts": {
     "lint": "eslint index.js test && npm run prettier",
-    "prettier": "prettier --write --list-different '**/*.{js?(on),.d.ts,md}'",
+    "prettier": "prettier --write --list-different '**/*.{js?(on),.d.ts}'",
     "test": "mocha \"test/**/*.js\" --exit",
     "cover": "nyc --all mocha \"test/**/*.js\" --exit",
     "typedoc": "typedoc --module es2015 --target es2015 --includeDeclarations --excludeExternals --mode file --readme none --out typedoc index.d.ts",
@@ -52,7 +52,7 @@
     "mysql2": "^1.1.2",
     "nyc": "^11.0.1",
     "pg": "^7.1.0",
-    "prettier": "^1.8.2",
+    "prettier": "1.9.2",
     "semantic-release": "^10.0.0",
     "sequelize": "^4.0.0",
     "typedoc": "^0.9.0",

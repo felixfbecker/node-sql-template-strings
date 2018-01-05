@@ -2,3 +2,4 @@
 coverage/
 package.json
 typedoc/
+*.md
