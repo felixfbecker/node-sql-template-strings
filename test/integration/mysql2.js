@@ -3,7 +3,8 @@ const mysql2 = require('mysql2')
 const mysql2Promise = require('mysql2/promise')
 const assert = require('assert')
 
-describe('mysql2', () => {
+describe('mysql2', function() {
+  this.timeout(10000)
   for (const test of ['Connection', 'Pool']) {
     describe(test, () => {
       for (const method of ['query', 'execute']) {

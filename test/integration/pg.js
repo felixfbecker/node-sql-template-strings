@@ -2,7 +2,8 @@ const SQL = require('../..')
 const pg = require('pg')
 const assert = require('assert')
 
-describe('pg', () => {
+describe('pg', function() {
+  this.timeout(10000)
   it('should work with a simple query', done => {
     const client = new pg.Client(process.env.PG_CONN)
     client.connect(err => {

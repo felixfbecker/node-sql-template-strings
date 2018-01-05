@@ -2,7 +2,8 @@ const SQL = require('../..')
 const mysql = require('mysql')
 const assert = require('assert')
 
-describe('mysql', () => {
+describe('mysql', function() {
+  this.timeout(10000)
   for (const test of ['Connection', 'Pool']) {
     describe(test, () => {
       it('should work with a simple query', done => {

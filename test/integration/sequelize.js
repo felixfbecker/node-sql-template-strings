@@ -2,7 +2,8 @@ const SQL = require('../..')
 const Sequelize = require('sequelize')
 const assert = require('assert')
 
-describe('sequelize', () => {
+describe('sequelize', function() {
+  this.timeout(10000)
   it('should work with a simple query', () => {
     const sequelize = new Sequelize(process.env.PG_CONN, { logging: false })
     return sequelize.query(SQL`SELECT ${1} + 1 as result`, { type: Sequelize.QueryTypes.SELECT }).then(rows => {
