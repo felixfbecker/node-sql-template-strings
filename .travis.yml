@@ -16,7 +16,8 @@ services:
 script:
   - npm run lint
   - npm run cover
-  - 'nyc report --reporter=lcov > coverage.lcov && bash <(curl -s https://codecov.io/bash) -f coverage/lcov.info'
+  - nyc report --reporter=json
+  - bash <(curl -s https://codecov.io/bash) -f coverage/coverage-final.json
 
 jobs:
   include:
