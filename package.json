@@ -19,7 +19,7 @@
   },
   "scripts": {
     "lint": "eslint index.js test && npm run prettier",
-    "prettier": "prettier --write --list-different '**/*.{js?(on),.d.ts}'",
+    "prettier": "prettier --write --list-different '**/*.{js?(on),.d.ts,md}'",
     "test": "mocha \"test/**/*.js\" --exit",
     "cover": "nyc --all mocha \"test/**/*.js\" --exit",
     "typedoc": "typedoc --module es2015 --target es2015 --includeDeclarations --excludeExternals --mode file --readme none --out typedoc index.d.ts",
