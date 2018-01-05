@@ -42,7 +42,6 @@
   "author": "Felix Becker",
   "license": "ISC",
   "devDependencies": {
-    "@semantic-release/github": "^2.0.0",
     "cz-conventional-changelog": "^2.0.0",
     "eslint": "^4.1.0",
     "eslint-config-prettier": "^2.8.0",
@@ -53,7 +52,7 @@
     "nyc": "^11.0.1",
     "pg": "^7.1.0",
     "prettier": "1.9.2",
-    "semantic-release": "^10.0.0",
+    "semantic-release": "^12.1.0",
     "sequelize": "^4.0.0",
     "typedoc": "^0.9.0",
     "validate-commit-msg": "^2.12.2"
@@ -70,8 +69,5 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
-  },
-  "release": {
-    "verifyConditions": "@semantic-release/github"
   }
 }
