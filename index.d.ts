@@ -61,7 +61,6 @@ export class SQLStatement {
    */
   concat(statement: SQLStatement | string | number): SQLStatement
 
-
   /**
    * Sets the name property of this statement for prepared statements in postgres
    *

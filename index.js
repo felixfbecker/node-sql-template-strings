@@ -42,11 +42,11 @@ class SQLStatement {
   concat(statement) {
     const sqlStatement = new SQLStatement(this.strings.slice())
 
-    if(this.bind) {
-      sqlStatement.bind = this.bind.slice();
-      delete sqlStatement.values;
+    if (this.bind) {
+      sqlStatement.bind = this.bind.slice()
+      delete sqlStatement.values
     } else {
-      sqlStatement.values = this.values.slice();
+      sqlStatement.values = this.values.slice()
     }
 
     if (statement instanceof SQLStatement) {
