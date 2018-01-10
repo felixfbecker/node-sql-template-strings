@@ -95,10 +95,10 @@ describe('SQL', () => {
       const value1 = 1234
       const value2 = 5678
       const value3 = 9876
-      const baseQuery = SQL`SELECT * FROM table WHERE column = ${value1}`;
-      
-      const query1 = baseQuery.concat(SQL` AND other_column = ${value2}`);
-      const query2 = baseQuery.concat(SQL` AND other_column = ${value3}`);
+      const baseQuery = SQL`SELECT * FROM table WHERE column = ${value1}`
+
+      const query1 = baseQuery.concat(SQL` AND other_column = ${value2}`)
+      const query2 = baseQuery.concat(SQL` AND other_column = ${value3}`)
       assert.equal(query1.sql, 'SELECT * FROM table WHERE column = ? AND other_column = ?')
       assert.equal(query1.text, 'SELECT * FROM table WHERE column = $1 AND other_column = $2')
       assert.deepEqual(query1.values, [value1, value2])
