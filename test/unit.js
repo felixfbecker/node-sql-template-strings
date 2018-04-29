@@ -40,6 +40,23 @@ describe('SQL', () => {
     throw new assert.AssertionError({ message: 'expected enumerable property "sql"' })
   })
 
+  it('should work with nested queries', () => {
+    const query1 = SQL`SELECT * FROM table WHERE column1 = ${1}`
+    const query2 = SQL`SELECT * FROM (${query1}) query1 WHERE column2 = ${2}`
+    assert.equal(query2.sql, 'SELECT * FROM (SELECT * FROM table WHERE column1 = ?) query1 WHERE column2 = ?')
+    assert.equal(query2.text, 'SELECT * FROM (SELECT * FROM table WHERE column1 = $1) query1 WHERE column2 = $2')
+    assert.deepEqual(query2.values, [1, 2])
+  })
+
+  it('should work with multiple nested queries', () => {
+    let query1 = SQL`b=${2}, c=${3}`
+    let query2 = SQL`d=${4}, e=${5}`
+    let query3 = SQL`a=${1}, ${query1}, ${query2}, f=${6}`
+    assert.equal(query3.sql, 'a=?, b=?, c=?, d=?, e=?, f=?')
+    assert.equal(query3.text, 'a=$1, b=$2, c=$3, d=$4, e=$5, f=$6')
+    assert.deepEqual(query3.values, [1, 2, 3, 4, 5, 6])
+  })
+
   describe('append()', () => {
     it('should return this', () => {
       const query = SQL`SELECT * FROM table`

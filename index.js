@@ -6,8 +6,21 @@ class SQLStatement {
    * @param {any[]} values
    */
   constructor(strings, values) {
-    this.strings = strings
-    this.values = values
+    this.strings = strings.slice(0)
+    this.values = []
+    for(let i=0, j=0; i<values.length; i++, j++) {
+      let value = values[i]
+      if(value instanceof SQLStatement) { // handle nested sql statement
+        let stringLeft = this.strings[j] + value.strings[0]
+        let stringRight = value.strings[value.strings.length-1] + this.strings[j+1]
+        let stringsMiddle = value.strings.slice(1, value.strings.length -1)
+        this.strings.splice(j, 2, stringLeft, ... stringsMiddle, stringRight)
+        this.values.push(... value.values)
+        j += stringsMiddle.length
+      } else {
+        this.values.push(value)
+      }
+    }
   }
 
   /** Returns the SQL Statement for Sequelize */
