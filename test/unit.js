@@ -48,13 +48,21 @@ describe('SQL', () => {
     assert.deepEqual(query2.values, [1, 2])
   })
 
+  it('should work with parameterless nested queries', () => {
+    const query1 = SQL`tableName`
+    const query2 = SQL`SELECT * FROM ${query1}`
+    assert.equal(query2.sql, 'SELECT * FROM tableName')
+    assert.equal(query2.text, 'SELECT * FROM tableName')
+  })
+
   it('should work with multiple nested queries', () => {
     let query1 = SQL`b=${2}, c=${3}`
     let query2 = SQL`d=${4}, e=${5}`
-    let query3 = SQL`a=${1}, ${query1}, ${query2}, f=${6}`
-    assert.equal(query3.sql, 'a=?, b=?, c=?, d=?, e=?, f=?')
-    assert.equal(query3.text, 'a=$1, b=$2, c=$3, d=$4, e=$5, f=$6')
-    assert.deepEqual(query3.values, [1, 2, 3, 4, 5, 6])
+    let query3 = SQL`foo`
+    let query = SQL`a=${1}, ${query1}, ${query3}, ${query2}, f=${6}`
+    assert.equal(query.sql, 'a=?, b=?, c=?, foo, d=?, e=?, f=?')
+    assert.equal(query.text, 'a=$1, b=$2, c=$3, foo, d=$4, e=$5, f=$6')
+    assert.deepEqual(query.values, [1, 2, 3, 4, 5, 6])
   })
 
   describe('append()', () => {
