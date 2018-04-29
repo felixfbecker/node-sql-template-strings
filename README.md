@@ -88,6 +88,22 @@ if (params.name) {
 query.append(SQL` LIMIT 10 OFFSET ${params.offset || 0}`)
 ```
 
+## Nested queries
+
+```js
+function authorFilter(author) {
+  return SQL`author = ${author}`
+}
+function nameFilter(name) {
+  return SQL`name = ${name}`
+}
+const query = SQL`SELECT author FROM books WHERE ${authorFilter(author)} AND ${nameFilter(book)}`
+typeof query // => 'object'
+query.text   // => 'SELECT author FROM books WHERE name = $1 AND author = $2'
+query.sql    // => 'SELECT author FROM books WHERE name = ? AND author = ?'
+query.values // => ['harry potter', 'J. K. Rowling']
+```
+
 ## Raw values
 Some values cannot be replaced by placeholders in prepared statements, like table names.
 `append()` replaces the `SQL.raw()` syntax from version 1, just pass a string and it will get appended raw.
