@@ -5,6 +5,10 @@ node_js:
   - '6'
   - '4'
 
+cache:
+  directories:
+    - ~/.npmrc
+
 env:
   global:
     - MYSQL_CONN=mysql://root@localhost/
@@ -13,6 +17,13 @@ env:
 services:
   - mysql
   - postgresql
+
+before_install:
+  - npm install -g npm@6.0.0
+
+install:
+  - npm ci
+
 script:
   - npm run lint
   - npm run cover
@@ -40,5 +51,5 @@ stages:
     if: branch = master AND type = push AND fork = false
 
 branches:
-  except:
-    - /^v\d+\.\d+\.\d+$/
+  only:
+    - master
