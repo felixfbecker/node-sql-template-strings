@@ -51,7 +51,7 @@
     "mysql2": "^1.1.2",
     "nyc": "^11.0.1",
     "pg": "^7.1.0",
-    "prettier": "1.9.2",
+    "prettier": "1.12.1",
     "semantic-release": "^12.1.0",
     "sequelize": "^4.0.0",
     "typedoc": "^0.9.0",
