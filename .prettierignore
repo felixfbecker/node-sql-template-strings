@@ -1,5 +1,6 @@
 .nyc_output/
 coverage/
 package.json
+package-lock.json
 typedoc/
 *.md
