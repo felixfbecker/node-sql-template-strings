@@ -44,7 +44,7 @@
   "devDependencies": {
     "cz-conventional-changelog": "^2.0.0",
     "eslint": "^4.1.0",
-    "eslint-config-prettier": "^2.8.0",
+    "eslint-config-prettier": "^4.0.0",
     "husky": "^0.14.1",
     "mocha": "^5.0.0",
     "mysql": "^2.12.0",
