@@ -70,7 +70,6 @@ describe('SQL', () => {
       assert.equal(statement.text, 'SELECT * FROM table WHERE column = $1 ORDER BY other_column')
       assert.strictEqual(statement.query, 'SELECT * FROM table WHERE column = $1 ORDER BY other_column')
       assert.strictEqual(statement.values, undefined)
-      assert.strictEqual('values' in statement, false)
       assert.deepStrictEqual(statement.bind, [1234])
     })
   })
@@ -87,7 +86,6 @@ describe('SQL', () => {
       const statement = SQL`SELECT * FROM table WHERE column = ${value}`.useBind(true)
       assert.strictEqual(statement.query, 'SELECT * FROM table WHERE column = $1')
       assert.strictEqual(statement.values, undefined)
-      assert.strictEqual('values' in statement, false)
       assert.deepStrictEqual(statement.bind, [123])
     })
 
@@ -96,7 +94,6 @@ describe('SQL', () => {
       const statement = SQL`SELECT * FROM table WHERE column = ${value}`.useBind()
       assert.strictEqual(statement.query, 'SELECT * FROM table WHERE column = $1')
       assert.strictEqual(statement.values, undefined)
-      assert.strictEqual('values' in statement, false)
       assert.deepStrictEqual(statement.bind, [123])
     })
 
@@ -105,7 +102,6 @@ describe('SQL', () => {
       const statement = SQL`SELECT * FROM table WHERE column = ${value}`.useBind(true).useBind(true)
       assert.strictEqual(statement.query, 'SELECT * FROM table WHERE column = $1')
       assert.strictEqual(statement.values, undefined)
-      assert.strictEqual('values' in statement, false)
       assert.deepStrictEqual(statement.bind, [123])
     })
 
@@ -114,7 +110,6 @@ describe('SQL', () => {
       const statement = SQL`SELECT * FROM table WHERE column = ${value}`.useBind(true).useBind(false)
       assert.strictEqual(statement.query, 'SELECT * FROM table WHERE column = ?')
       assert.strictEqual(statement.bind, undefined)
-      assert.strictEqual('bind' in statement, false)
       assert.deepStrictEqual(statement.values, [123])
     })
   })
