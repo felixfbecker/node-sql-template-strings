@@ -28,7 +28,8 @@ class SQLStatement {
     if (statement instanceof SQLStatement) {
       this.strings[this.strings.length - 1] += statement.strings[0]
       this.strings.push.apply(this.strings, statement.strings.slice(1))
-      ;(this.values || this.bind).push.apply(this.values, statement.values)
+      const list = this.values || this.bind
+      list.push.apply(list, statement.values)
     } else {
       this.strings[this.strings.length - 1] += statement
     }
