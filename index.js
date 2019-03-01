@@ -1,5 +1,13 @@
 'use strict'
 
+const lsp = str => (/^[\s\n\r]/.test(str) ? str : ' ' + str)
+const push = (str, val, statement, spaced) => {
+  const { strings } = statement
+  str[str.length - 1] += spaced ? lsp(strings[0]) : strings[0]
+  str.push(...strings.slice(1))
+  val.push(...(statement.values || statement.bind))
+}
+
 class SQLStatement {
   /**
    * @param {string[]} strings
@@ -25,20 +33,19 @@ class SQLStatement {
    * @returns {this}
    */
   append(statement) {
+    const { strings } = this
     if (statement instanceof SQLStatement) {
-      this.strings[this.strings.length - 1] += statement.strings[0]
-      this.strings.push.apply(this.strings, statement.strings.slice(1))
-      const list = this.values || this.bind
-      list.push.apply(list, statement.values)
+      push(strings, this.values || this.bind, statement, true)
     } else {
-      this.strings[this.strings.length - 1] += statement
+      strings[strings.length - 1] += lsp(statement)
     }
     return this
   }
 
   /**
    * Use a prepared statement with Sequelize.
-   * Makes `query` return a query with `$n` syntax instead of `?`  and switches the `values` key name to `bind`
+   * Makes `query` return a query with `$n` syntax instead of `?`
+   * and switches the `values` key name to `bind`
    * @param {boolean} [value=true] value If omitted, defaults to `true`
    * @returns this
    */
@@ -74,16 +81,60 @@ Object.defineProperty(SQLStatement.prototype, 'sql', {
   },
 })
 
+class SQLQuote {
+  /**
+   * @param {string} quote
+   */
+  constructor(quote) {
+    this.char = quote
+    this.escape = new RegExp(quote, 'g')
+  }
+}
+
 /**
  * @param {string[]} strings
  * @param {...any} values
  * @returns {SQLStatement}
  */
-function SQL(strings) {
-  return new SQLStatement(strings.slice(0), Array.from(arguments).slice(1))
+function SQL(tpl, ...val) {
+  const strings = [tpl[0]]
+  const values = []
+  for (let { length } = tpl, prev = tpl[0], j = 0, i = 1; i < length; i++) {
+    const current = tpl[i]
+    const value = val[i - 1]
+    if (/^('|")/.test(current) && RegExp.$1 === prev.slice(-1)) {
+      if (this instanceof SQLQuote) {
+        strings[j] = [strings[j].slice(0, -1), String(value).replace(this.escape, '\\$&'), current.slice(1)].join(
+          this.char
+        )
+      } else {
+        throw new Error(`Unable to escape ${value}. See SQL.withQuotes(...)`)
+      }
+    } else {
+      if (value instanceof SQLStatement) {
+        push(strings, values, value, false)
+        j = strings.length - 1
+        strings[j] += current
+      } else {
+        values.push(value)
+        j = strings.push(current) - 1
+      }
+      prev = strings[j]
+    }
+  }
+  return new SQLStatement(strings, values)
 }
 
+/**
+ * @param {string} quote
+ * @returns {SQL}
+ */
+SQL.withQuotes = quote => {
+  const sqlQuote = new SQLQuote(quote)
+  return (...args) => SQL.apply(sqlQuote, args)
+}
+
+SQL.SQL = SQL
+SQL.default = SQL
+SQL.SQLStatement = SQLStatement
 module.exports = SQL
-module.exports.SQL = SQL
-module.exports.default = SQL
-module.exports.SQLStatement = SQLStatement
