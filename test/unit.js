@@ -40,6 +40,16 @@ describe('SQL', () => {
     throw new assert.AssertionError({ message: 'expected enumerable property "sql"' })
   })
 
+  it('should work with contained queries', () => {
+    const cols = SQL.raw('*')
+    const whereClause = SQL`column1 = ${1}`
+    const query = SQL`SELECT ${cols} FROM table WHERE ${whereClause} AND column2 = ${2}`
+    assert.equal(query.sql, 'SELECT * FROM table WHERE column1 = ? AND column2 = ?')
+    assert.equal(query.query, 'SELECT * FROM table WHERE column1 = ? AND column2 = ?')
+    assert.equal(query.text, 'SELECT * FROM table WHERE column1 = $1 AND column2 = $2')
+    assert.deepEqual(query.values, [1, 2])
+  })
+
   describe('append()', () => {
     it('should return this', () => {
       const query = SQL`SELECT * FROM table`
