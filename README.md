@@ -117,8 +117,8 @@ query.text   // => 'SELECT name FROM books WHERE author = ANY($1)'
 query.values // => ['J. K. Rowling', 'J. R. R. Tolkien']
 ```
 
-## Prepared Statements in Postgres
-Postgres requires prepared statements to be named, otherwise the parameters will be escaped and replaced on the client side.
+## Named Prepared Statements in Postgres
+Postgres has the option of naming prepared statements, which allows parsing and other work to be reused (and requires the SQL associated with the name to stay the same, with only the parameters changing).
 You can set the name with the `setName()` method:
 
 ```js
