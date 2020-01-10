@@ -73,6 +73,30 @@ describe('SQL', () => {
       assert.strictEqual('values' in statement, false)
       assert.deepStrictEqual(statement.bind, [1234])
     })
+
+    it('should ignore undefined arguments', () => {
+      const value = 1234
+      const query = SQL`SELECT * FROM table WHERE column = ${value}`.append(undefined)
+      assert.equal(query.sql, 'SELECT * FROM table WHERE column = ?')
+      assert.equal(query.text, 'SELECT * FROM table WHERE column = $1')
+      assert.deepEqual(query.values, [value])
+    })
+
+    it('should ignore empty arguments', () => {
+      const value = 1234
+      const query = SQL`SELECT * FROM table WHERE column = ${value}`.append()
+      assert.equal(query.sql, 'SELECT * FROM table WHERE column = ?')
+      assert.equal(query.text, 'SELECT * FROM table WHERE column = $1')
+      assert.deepEqual(query.values, [value])
+    })
+
+    it('should ignore empty string arguments', () => {
+      const value = 1234
+      const query = SQL`SELECT * FROM table WHERE column = ${value}`.append('')
+      assert.equal(query.sql, 'SELECT * FROM table WHERE column = ?')
+      assert.equal(query.text, 'SELECT * FROM table WHERE column = $1')
+      assert.deepEqual(query.values, [value])
+    })
   })
 
   describe('setName()', () => {
