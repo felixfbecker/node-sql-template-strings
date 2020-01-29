@@ -45,6 +45,25 @@ export class SQLStatement {
   append(statement: SQLStatement | string | number): this
 
   /**
+   * Appends multiple strings or statements
+   *
+   * ```ts
+   * query.appendAll([SQL`AND genre = ${genre}`, 'ORDER BY rating'])
+   * query.text   // => 'SELECT author FROM books WHERE name = $1 AND author = $2 AND genre = $3 ORDER BY rating'
+   * query.sql    // => 'SELECT author FROM books WHERE name = ? AND author = ? AND genre = ? ORDER BY rating'
+   * query.values // => ['harry potter', 'J. K. Rowling', 'Fantasy'] ORDER BY rating`
+   *
+   * const query = SQL`INSERT INTO books (name, author) VALUES `
+   * const books = [{ name: 'harry potter', author: 'J. K. Rowling' }, { name: 'The Hobbit', author: 'J. R. R. Tolkien' }]
+   * query.appendAll(books.map(book => SQL`(${book.name}, ${book.author})`), ', ') // Custom delimiter: ', '
+   * query.text   // => 'INSERT INTO books (name, author) VALUES ($1, $2), ($3, $4)'
+   * query.sql    // => 'INSERT INTO books (name, author) VALUES (?, ?), (?, ?)'
+   * query.values // => ['harry potter', 'J. K. Rowling', 'The Hobbit', 'J. R. R. Tolkien'] ORDER BY rating`
+   * ```
+   */
+  appendAll(statement: (SQLStatement|string|number)[], delimiter?:string): this;
+
+  /**
    * Sets the name property of this statement for prepared statements in postgres
    *
    * ```ts

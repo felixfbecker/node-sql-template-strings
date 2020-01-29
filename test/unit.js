@@ -75,6 +75,54 @@ describe('SQL', () => {
     })
   })
 
+  describe('appendAll()', () => {
+    it('should append multiple statements', () => {
+      const value1 = 1234
+      const value2 = '5678'
+      const statement = SQL`SELECT * FROM table `
+        .appendAll([
+          SQL`WHERE col_1 = ${value1}`,
+          SQL`AND col_2 = ${value2}`
+        ])
+      assert.equal(statement.sql, 'SELECT * FROM table WHERE col_1 = ? AND col_2 = ?')
+      assert.equal(statement.text, 'SELECT * FROM table WHERE col_1 = $1 AND col_2 = $2')
+      assert.deepEqual(statement.values, [value1, value2])
+    })
+
+    it('should work with strings', () => {
+      const value1 = 1234
+      const value2 = '5678'
+      const statement = SQL`SELECT * `
+        .appendAll([
+          'FROM table',
+          SQL`WHERE col_1 = ${value1}`,
+          SQL`AND col_2 = ${value2}`
+        ])
+      assert.equal(statement.sql, 'SELECT * FROM table WHERE col_1 = ? AND col_2 = ?')
+      assert.equal(statement.text, 'SELECT * FROM table WHERE col_1 = $1 AND col_2 = $2')
+      assert.deepEqual(statement.values, [value1, value2])
+    })
+
+    it('should use a custom delimiter if passed in', () => {
+      const value1 = 1234
+      const value2 = '5678'
+      const statement = SQL`SELECT * FROM table WHERE `
+        .appendAll([SQL`col_1 = ${value1}`, SQL`col_2 = ${value2}`], ' AND ')
+      assert.equal(statement.sql, 'SELECT * FROM table WHERE col_1 = ? AND col_2 = ?')
+      assert.equal(statement.text, 'SELECT * FROM table WHERE col_1 = $1 AND col_2 = $2')
+      assert.deepEqual(statement.values, [value1, value2])
+    })
+
+    it('should work with multiple inserts', () => {
+      const rows = [{ col1: 'one', col2: 'two' }, { col1: 'three', col2: 'four' }]
+      const statement = SQL`INSERT INTO table (column_1, column_2) VALUES `
+        .appendAll(rows.map(c => SQL`(${c.col1}, ${c.col2})`), ', ')
+      assert.equal(statement.sql, 'INSERT INTO table (column_1, column_2) VALUES (?, ?), (?, ?)')
+      assert.equal(statement.text, 'INSERT INTO table (column_1, column_2) VALUES ($1, $2), ($3, $4)')
+      assert.deepEqual(statement.values, ['one', 'two', 'three', 'four'])
+    })
+  })
+
   describe('setName()', () => {
     it('should set the name and return this', () => {
       assert.equal(SQL`SELECT * FROM table`.setName('my_query').name, 'my_query')
