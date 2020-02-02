@@ -6,8 +6,33 @@ class SQLStatement {
    * @param {any[]} values
    */
   constructor(strings, values) {
-    this.strings = strings
-    this.values = values
+    strings = strings.concat()
+    this.strings = []
+    this.values = []
+    
+    let curStr = 0
+    values.forEach(v => {
+      if (v instanceof SQLStatement) {
+        if (v.strings.length == 1) {
+          strings[curStr + 1] = strings[curStr] + v.strings[0] + strings[curStr + 1]
+          curStr += 1
+          return
+        }
+        this.values = this.values.concat(v.values)
+        this.strings.push((strings[curStr++] || '') + v.strings[0])
+        this.strings = this.strings.concat(v.strings.slice(1, -1))
+        strings[curStr] = v.strings[v.strings.length - 1] + strings[curStr]
+        return
+      }
+
+      this.values.push(v)
+      this.strings.push(strings[curStr++])
+    })
+
+    const lastStr = strings[curStr++]
+    if (lastStr !== undefined)
+      this.strings.push(lastStr)
+    
   }
 
   /** Returns the SQL Statement for Sequelize */
@@ -81,6 +106,10 @@ Object.defineProperty(SQLStatement.prototype, 'sql', {
  */
 function SQL(strings) {
   return new SQLStatement(strings.slice(0), Array.from(arguments).slice(1))
+}
+
+SQL.raw = function(str) {
+  return new SQLStatement([str], [])
 }
 
 module.exports = SQL
