@@ -37,6 +37,30 @@ class SQLStatement {
   }
 
   /**
+   * @param {SQLStatement|string} statement
+   * @returns {SQLStatement}
+   */
+  concat(statement) {
+    const sqlStatement = new SQLStatement(this.strings.slice())
+
+    if (this.bind) {
+      sqlStatement.bind = this.bind.slice()
+      delete sqlStatement.values
+    } else {
+      sqlStatement.values = this.values.slice()
+    }
+
+    if (statement instanceof SQLStatement) {
+      sqlStatement.strings[sqlStatement.strings.length - 1] += statement.strings[0]
+      sqlStatement.strings.push.apply(sqlStatement.strings, statement.strings.slice(1))
+      ;(sqlStatement.values || sqlStatement.bind).push.apply(sqlStatement.values, statement.values)
+    } else {
+      sqlStatement.strings[sqlStatement.strings.length - 1] += statement
+    }
+    return sqlStatement
+  }
+
+  /**
    * Use a prepared statement with Sequelize.
    * Makes `query` return a query with `$n` syntax instead of `?`  and switches the `values` key name to `bind`
    * @param {boolean} [value=true] value If omitted, defaults to `true`

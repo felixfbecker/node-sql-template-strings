@@ -45,6 +45,23 @@ export class SQLStatement {
   append(statement: SQLStatement | string | number): this
 
   /**
+   * Concatenates a string or another statement and returns a new instance of SQLStatement
+   * (Immutable version of append)
+   *
+   * ```ts
+   * query.concat(SQL`AND genre = ${genre}`).concat(' ORDER BY rating')
+   * query.text   // => 'SELECT author FROM books WHERE name = $1 AND author = $2 AND genre = $3 ORDER BY rating'
+   * query.sql    // => 'SELECT author FROM books WHERE name = ? AND author = ? AND genre = ? ORDER BY rating'
+   * query.values // => ['harry potter', 'J. K. Rowling', 'Fantasy'] ORDER BY rating`
+   *
+   * const baseQuery = SQL`SELECT * FROM books`;
+   * baseQuery.concat(SQL` WHERE name = ${params.name}`).text // => 'SELECT * FROM books WHERE name = $1'
+   * basequery.concat(SQL` WHERE author = ${params.author}`).text // => 'SELECT * FROM books WHERE author = $1'
+   * ```
+   */
+  concat(statement: SQLStatement | string | number): SQLStatement
+
+  /**
    * Sets the name property of this statement for prepared statements in postgres
    *
    * ```ts

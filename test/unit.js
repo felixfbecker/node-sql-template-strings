@@ -75,6 +75,58 @@ describe('SQL', () => {
     })
   })
 
+  describe('concat()', () => {
+    it('should return new SQLStatement instance', () => {
+      const query = SQL`SELECT * FROM table`
+      assert.notStrictEqual(query, query.concat('whatever'))
+      assert(query instanceof SQL.SQLStatement)
+    })
+
+    it('should concat a second SQLStatement', () => {
+      const value1 = 1234
+      const value2 = 5678
+      const query = SQL`SELECT * FROM table WHERE column = ${value1}`.concat(SQL` AND other_column = ${value2}`)
+      assert.equal(query.sql, 'SELECT * FROM table WHERE column = ? AND other_column = ?')
+      assert.equal(query.text, 'SELECT * FROM table WHERE column = $1 AND other_column = $2')
+      assert.deepEqual(query.values, [value1, value2])
+    })
+
+    it('should be immutable', () => {
+      const value1 = 1234
+      const value2 = 5678
+      const value3 = 9876
+      const baseQuery = SQL`SELECT * FROM table WHERE column = ${value1}`
+
+      const query1 = baseQuery.concat(SQL` AND other_column = ${value2}`)
+      const query2 = baseQuery.concat(SQL` AND other_column = ${value3}`)
+      assert.equal(query1.sql, 'SELECT * FROM table WHERE column = ? AND other_column = ?')
+      assert.equal(query1.text, 'SELECT * FROM table WHERE column = $1 AND other_column = $2')
+      assert.deepEqual(query1.values, [value1, value2])
+      assert.equal(query2.sql, 'SELECT * FROM table WHERE column = ? AND other_column = ?')
+      assert.equal(query2.text, 'SELECT * FROM table WHERE column = $1 AND other_column = $2')
+      assert.deepEqual(query2.values, [value1, value3])
+    })
+
+    it('should concat a string', () => {
+      const value = 1234
+      const query = SQL`SELECT * FROM table WHERE column = ${value}`.concat(' ORDER BY other_column')
+      assert.equal(query.sql, 'SELECT * FROM table WHERE column = ? ORDER BY other_column')
+      assert.equal(query.text, 'SELECT * FROM table WHERE column = $1 ORDER BY other_column')
+      assert.deepEqual(query.values, [value])
+    })
+
+    it('should work with a bound statement', () => {
+      const value = 1234
+      const statement = SQL`SELECT * FROM table WHERE column = ${value}`.useBind(true).concat(' ORDER BY other_column')
+      assert.equal(statement.sql, 'SELECT * FROM table WHERE column = ? ORDER BY other_column')
+      assert.equal(statement.text, 'SELECT * FROM table WHERE column = $1 ORDER BY other_column')
+      assert.strictEqual(statement.query, 'SELECT * FROM table WHERE column = $1 ORDER BY other_column')
+      assert.strictEqual(statement.values, undefined)
+      assert.strictEqual('values' in statement, false)
+      assert.deepStrictEqual(statement.bind, [1234])
+    })
+  })
+
   describe('setName()', () => {
     it('should set the name and return this', () => {
       assert.equal(SQL`SELECT * FROM table`.setName('my_query').name, 'my_query')
