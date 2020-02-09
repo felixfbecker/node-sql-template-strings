@@ -118,4 +118,33 @@ describe('SQL', () => {
       assert.deepStrictEqual(statement.values, [123])
     })
   })
+
+  describe('Auto Escape', () => {
+    it('should escape the table name', () => {
+      const sql = SQL.withQuotes('`')
+      assert.strictEqual(sql`SELECT * FROM '${`table_${123}`}'`.sql, 'SELECT * FROM `table_123`')
+    })
+    it('should have no extra values', () => {
+      const sql = SQL.withQuotes('`')
+      assert.strictEqual(sql`SELECT * FROM '${`table_${123}`}'`.values.length, 0)
+    })
+    it('should throw if no escape', () => {
+      try {
+        SQL`SELECT * FROM '${`table_${123}`}'`
+        assert.strictEqual(true, false)
+      } catch (e) {
+        assert.strictEqual(true, true)
+      }
+    })
+  })
+
+  describe('Nested SQLStatement', () => {
+    it('should pollute the initial statement', () => {
+      const name = 'no-shenanigans'
+      const age = Math.random()
+      const sql = SQL`SELECT * FROM table WHERE ${SQL`name = ${name}`} AND age = ${age}`
+      assert.strictEqual(sql.sql, 'SELECT * FROM table WHERE name = ? AND age = ?')
+      assert.deepStrictEqual(sql.values, [name, age])
+    })
+  })
 })
