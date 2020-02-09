@@ -21,7 +21,7 @@ class SQLStatement {
   }
 
   /**
-   * @param {SQLStatement|string} statement
+   * @param {SQLStatement|string} statement. Undefined or empty strings are ignored.
    * @returns {this}
    */
   append(statement) {
@@ -30,7 +30,7 @@ class SQLStatement {
       this.strings.push.apply(this.strings, statement.strings.slice(1))
       const list = this.values || this.bind
       list.push.apply(list, statement.values)
-    } else {
+    } else if (statement) {
       this.strings[this.strings.length - 1] += statement
     }
     return this
