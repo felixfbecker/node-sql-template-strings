@@ -64,6 +64,11 @@ class SQLStatement {
     this.name = name
     return this
   }
+  
+  set(propName, propValue) {
+    this[propName] = propValue
+    return this
+  }
 }
 
 /** Returns the SQL Statement for mysql */
