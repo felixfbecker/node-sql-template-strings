@@ -37,6 +37,24 @@ class SQLStatement {
   }
 
   /**
+   * @param {array} array
+   * @returns {this}
+   */
+  appendIn(array) {
+    if (array instanceof Array && array.length) {
+      this.strings[this.strings.length - 1] += ' IN ('
+      array.forEach((value, i) => {
+        if (i) this.strings[this.strings.length - 1] += ', '
+        this.strings.push('')
+      });
+      this.strings[this.strings.length - 1] += ')'
+      const list = this.values ? 'values' : 'bind'
+      this[list] = this[list].concat.apply(this[list], array)
+    }
+    return this;
+  };
+
+  /**
    * Use a prepared statement with Sequelize.
    * Makes `query` return a query with `$n` syntax instead of `?`  and switches the `values` key name to `bind`
    * @param {boolean} [value=true] value If omitted, defaults to `true`

@@ -75,6 +75,29 @@ describe('SQL', () => {
     })
   })
 
+  describe('appendIn()', () => {
+    it('should return this', () => {
+      const query = SQL`SELECT * FROM table`
+      assert.strictEqual(query, query.appendIn('whatever'))
+    })
+
+    it('should append an array', () => {
+      const values = [1234, 5678]
+      const query = SQL`SELECT * FROM table WHERE column`.appendIn(values)
+      assert.equal(query.sql, 'SELECT * FROM table WHERE column IN (?, ?)')
+      assert.equal(query.text, 'SELECT * FROM table WHERE column IN ($1, $2)')
+      assert.deepEqual(query.values, values)
+    })
+
+    it('should append an array and a statement', () => {
+      const values = [1234, 5678]
+      const query = SQL`SELECT * FROM table WHERE column`.appendIn(values).append(' ORDER BY other_column')
+      assert.equal(query.sql, 'SELECT * FROM table WHERE column IN (?, ?) ORDER BY other_column')
+      assert.equal(query.text, 'SELECT * FROM table WHERE column IN ($1, $2) ORDER BY other_column')
+      assert.deepEqual(query.values, values)
+    })
+  })
+
   describe('setName()', () => {
     it('should set the name and return this', () => {
       assert.equal(SQL`SELECT * FROM table`.setName('my_query').name, 'my_query')
