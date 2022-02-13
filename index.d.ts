@@ -1,5 +1,7 @@
 export class SQLStatement {
   private strings: string[]
+  
+  constructor(strings: any, values: any[]): this;
 
   /**
    * The SQL Statement for [node-postgres](https://www.npmjs.com/package/pg)
