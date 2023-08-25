@@ -54,7 +54,7 @@
     "prettier": "1.13.3",
     "semantic-release": "^15.0.0",
     "sequelize": "^4.0.0",
-    "typedoc": "^0.11.0",
+    "typedoc": "^0.25.0",
     "validate-commit-msg": "^2.12.2"
   },
   "nyc": {
