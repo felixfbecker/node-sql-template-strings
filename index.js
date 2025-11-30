@@ -42,28 +42,25 @@ class SQLStatement {
    * @returns {this}
    */
   unnest(recursive = true) {
-    const strings = [];
-    const values = [];
-    strings.push(this.strings[0]);
+    const strings = []
+    const values = []
+    strings.push(this.strings[0])
     for (let i = 0; i < this.values.length; i++) {
-      const value = this.values[i];
+      const value = this.values[i]
       if (value instanceof SQLStatement) {
-        const nest = recursive ? value.unnest(recursive) : value;
-        // Append the first string of the nested statement to the current string
-        strings[strings.length - 1] += nest.strings[0];
-        // Append the values from the nested statement
-        strings.push(...nest.strings.slice(1));
-        values.push(...nest.values);
-        // Append the last string of the nested statement to the current string
-        strings[strings.length - 1] += this.strings[i + 1];
+        const nest = recursive ? value.unnest(recursive) : value
+        strings[strings.length - 1] += nest.strings[0]
+        strings.push(...nest.strings.slice(1))
+        values.push(...nest.values)
+        strings[strings.length - 1] += this.strings[i + 1]
       } else {
-        values.push(value);
-        strings.push(this.strings[i + 1]);
+        values.push(value)
+        strings.push(this.strings[i + 1])
       }
     }
-    this.strings = strings;
-    this.values = values;
-    return this;
+    this.strings = strings
+    this.values = values
+    return this
   }
 
   /**

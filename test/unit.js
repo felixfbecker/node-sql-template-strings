@@ -27,9 +27,18 @@ describe('SQL', () => {
     const query1 = SQL`SELECT column2 FROM other_table WHERE column = ${value2} ORDER BY column2`
     const query2 = SQL`SELECT * FROM table WHERE column1 = ${value1} AND column2 IN (${query1}) AND column3 = ${value3}`
     query2.unnest()
-    assert.equal(query2.sql, 'SELECT * FROM table WHERE column1 = ? AND column2 IN (SELECT column2 FROM other_table WHERE column = ? ORDER BY column2) AND column3 = ?')
-    assert.equal(query2.query, 'SELECT * FROM table WHERE column1 = ? AND column2 IN (SELECT column2 FROM other_table WHERE column = ? ORDER BY column2) AND column3 = ?')
-    assert.equal(query2.text, 'SELECT * FROM table WHERE column1 = $1 AND column2 IN (SELECT column2 FROM other_table WHERE column = $2 ORDER BY column2) AND column3 = $3')
+    assert.equal(
+      query2.sql,
+      'SELECT * FROM table WHERE column1 = ? AND column2 IN (SELECT column2 FROM other_table WHERE column = ? ORDER BY column2) AND column3 = ?'
+    )
+    assert.equal(
+      query2.query,
+      'SELECT * FROM table WHERE column1 = ? AND column2 IN (SELECT column2 FROM other_table WHERE column = ? ORDER BY column2) AND column3 = ?'
+    )
+    assert.equal(
+      query2.text,
+      'SELECT * FROM table WHERE column1 = $1 AND column2 IN (SELECT column2 FROM other_table WHERE column = $2 ORDER BY column2) AND column3 = $3'
+    )
     assert.deepEqual(query2.values, [value1, value2, value3])
   })
 
@@ -42,9 +51,18 @@ describe('SQL', () => {
     const query2 = SQL`SELECT column2 FROM other_table2 WHERE column IN (${query1}) AND column3 = ${value3} ORDER BY column3`
     const query3 = SQL`SELECT * FROM table WHERE column1 = ${value1} AND column2 IN (${query2}) AND column4 = ${value4}`
     query3.unnest()
-    assert.equal(query3.sql, 'SELECT * FROM table WHERE column1 = ? AND column2 IN (SELECT column2 FROM other_table2 WHERE column IN (SELECT column2 FROM other_table1 WHERE column = ? ORDER BY column2) AND column3 = ? ORDER BY column3) AND column4 = ?')
-    assert.equal(query3.query, 'SELECT * FROM table WHERE column1 = ? AND column2 IN (SELECT column2 FROM other_table2 WHERE column IN (SELECT column2 FROM other_table1 WHERE column = ? ORDER BY column2) AND column3 = ? ORDER BY column3) AND column4 = ?')
-    assert.equal(query3.text, 'SELECT * FROM table WHERE column1 = $1 AND column2 IN (SELECT column2 FROM other_table2 WHERE column IN (SELECT column2 FROM other_table1 WHERE column = $2 ORDER BY column2) AND column3 = $3 ORDER BY column3) AND column4 = $4')
+    assert.equal(
+      query3.sql,
+      'SELECT * FROM table WHERE column1 = ? AND column2 IN (SELECT column2 FROM other_table2 WHERE column IN (SELECT column2 FROM other_table1 WHERE column = ? ORDER BY column2) AND column3 = ? ORDER BY column3) AND column4 = ?'
+    )
+    assert.equal(
+      query3.query,
+      'SELECT * FROM table WHERE column1 = ? AND column2 IN (SELECT column2 FROM other_table2 WHERE column IN (SELECT column2 FROM other_table1 WHERE column = ? ORDER BY column2) AND column3 = ? ORDER BY column3) AND column4 = ?'
+    )
+    assert.equal(
+      query3.text,
+      'SELECT * FROM table WHERE column1 = $1 AND column2 IN (SELECT column2 FROM other_table2 WHERE column IN (SELECT column2 FROM other_table1 WHERE column = $2 ORDER BY column2) AND column3 = $3 ORDER BY column3) AND column4 = $4'
+    )
     assert.deepEqual(query3.values, [value1, value2, value3, value4])
   })
 
@@ -57,9 +75,18 @@ describe('SQL', () => {
     const query2 = SQL`SELECT column2 FROM other_table2 WHERE column IN (${query1}) AND column3 = ${value3} ORDER BY column3`
     const query3 = SQL`SELECT * FROM table WHERE column1 = ${value1} AND column2 IN (${query2}) AND column4 = ${value4}`
     query3.unnest(false)
-    assert.equal(query3.sql, 'SELECT * FROM table WHERE column1 = ? AND column2 IN (SELECT column2 FROM other_table2 WHERE column IN (?) AND column3 = ? ORDER BY column3) AND column4 = ?')
-    assert.equal(query3.query, 'SELECT * FROM table WHERE column1 = ? AND column2 IN (SELECT column2 FROM other_table2 WHERE column IN (?) AND column3 = ? ORDER BY column3) AND column4 = ?')
-    assert.equal(query3.text, 'SELECT * FROM table WHERE column1 = $1 AND column2 IN (SELECT column2 FROM other_table2 WHERE column IN ($2) AND column3 = $3 ORDER BY column3) AND column4 = $4')
+    assert.equal(
+      query3.sql,
+      'SELECT * FROM table WHERE column1 = ? AND column2 IN (SELECT column2 FROM other_table2 WHERE column IN (?) AND column3 = ? ORDER BY column3) AND column4 = ?'
+    )
+    assert.equal(
+      query3.query,
+      'SELECT * FROM table WHERE column1 = ? AND column2 IN (SELECT column2 FROM other_table2 WHERE column IN (?) AND column3 = ? ORDER BY column3) AND column4 = ?'
+    )
+    assert.equal(
+      query3.text,
+      'SELECT * FROM table WHERE column1 = $1 AND column2 IN (SELECT column2 FROM other_table2 WHERE column IN ($2) AND column3 = $3 ORDER BY column3) AND column4 = $4'
+    )
     assert.deepEqual(query3.values, [value1, query1, value3, value4])
   })
 
