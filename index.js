@@ -36,14 +36,19 @@ class SQLStatement {
     return this
   }
 
-  unnest() {
+  /**
+   * Unnest any nested SQLStatements within this SQLStatement
+   * @param {boolean} [recursive=true] Whether to unnest recursively
+   * @returns {this}
+   */
+  unnest(recursive = true) {
     const strings = [];
     const values = [];
     strings.push(this.strings[0]);
     for (let i = 0; i < this.values.length; i++) {
       const value = this.values[i];
       if (value instanceof SQLStatement) {
-        const nest = value.unnest();
+        const nest = recursive ? value.unnest(recursive) : value;
         // Append the first string of the nested statement to the current string
         strings[strings.length - 1] += nest.strings[0];
         // Append the values from the nested statement

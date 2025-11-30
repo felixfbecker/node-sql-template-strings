@@ -59,7 +59,7 @@ export class SQLStatement {
    * query.values // => ['harry potter', 'J. K. Rowling']
    * ```
    */
-  unnest(): this
+  unnest(recursive?: boolean): this
 
   /**
    * Sets the name property of this statement for prepared statements in postgres
