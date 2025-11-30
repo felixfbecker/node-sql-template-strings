@@ -20,6 +20,19 @@ describe('SQL', () => {
     assert.deepEqual(query.values, [value])
   })
 
+  it('should work with a nested query', () => {
+    const value1 = 1234
+    const value2 = 5678
+    const value3 = 9012
+    const query1 = SQL`SELECT column2 FROM other_table WHERE column = ${value2}`
+    const query2 = SQL`SELECT * FROM table WHERE column1 = ${value1} AND column2 IN (${query1}) AND column3 = ${value3}`
+    query2.unnest()
+    assert.equal(query2.sql, 'SELECT * FROM table WHERE column1 = ? AND column2 IN (SELECT column2 FROM other_table WHERE column = ?) AND column3 = ?')
+    assert.equal(query2.query, 'SELECT * FROM table WHERE column1 = ? AND column2 IN (SELECT column2 FROM other_table WHERE column = ?) AND column3 = ?')
+    assert.equal(query2.text, 'SELECT * FROM table WHERE column1 = $1 AND column2 IN (SELECT column2 FROM other_table WHERE column = $2) AND column3 = $3')
+    assert.deepEqual(query2.values, [value1, value2, value3])
+  })
+
   it('should work with falsy values', () => {
     const value1 = false
     const value2 = null
