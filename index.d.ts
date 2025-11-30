@@ -45,6 +45,23 @@ export class SQLStatement {
   append(statement: SQLStatement | string | number): this
 
   /**
+   * Unnests any nested SQLStatements so that their values are merged into this statement
+   *
+   * ```ts
+   * const book = 'harry potter'
+   * const author = 'J. K. Rowling'
+   * const query = SQL`SELECT author FROM books WHERE genre IN (${SQL`SELECT category FROM books WHERE name = ${book}`}) AND author = ${author}`
+   *
+   * query.unnest()
+   *
+   * query.sql    // => 'SELECT author FROM books WHERE genre IN (SELECT category FROM books WHERE name = ?) AND author = ?'
+   * query.text   // => 'SELECT author FROM books WHERE genre IN (SELECT category FROM books WHERE name = $1) AND author = $2'
+   * query.values // => ['harry potter', 'J. K. Rowling']
+   * ```
+   */
+  unnest(recursive?: boolean): this
+
+  /**
    * Sets the name property of this statement for prepared statements in postgres
    *
    * ```ts
